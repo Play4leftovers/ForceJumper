@@ -114,6 +114,37 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &4256457574885109368
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3273675953235584132}
+  m_Layer: 0
+  m_Name: FirePoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3273675953235584132
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4256457574885109368}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0.66}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3424131184101892743}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8155408345395792475
 GameObject:
   m_ObjectHideFlags: 0
@@ -126,6 +157,7 @@ GameObject:
   - component: {fileID: 6666127733557367360}
   - component: {fileID: 8205581557579750301}
   - component: {fileID: 5262649424851441203}
+  - component: {fileID: 6446230286757112332}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -149,6 +181,7 @@ Transform:
   - {fileID: 879766280510847405}
   - {fileID: 1825806117435925196}
   - {fileID: 8823949311500127739}
+  - {fileID: 3273675953235584132}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &6666127733557367360
@@ -166,6 +199,11 @@ MonoBehaviour:
   jumpForce: 5
   moveSpeed: 10
   playerVelocity: {x: 0, y: 0, z: 0}
+  groundCheck: {fileID: 8823949311500127739}
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 64
+  groundDistance: 0.4
 --- !u!114 &8205581557579750301
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -239,6 +277,22 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 8f7151a4-ca67-49ae-9cd0-a407f8fd0edf
     m_ActionName: Player/Look[/Mouse/delta]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 6446230286757112332}
+        m_TargetAssemblyTypeName: Shooting, Assembly-CSharp
+        m_MethodName: Shoot
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 6932f414-d38f-43d2-ac5d-5821e19b2bb8
+    m_ActionName: Player/Shoot[/Mouse/leftButton]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
@@ -270,6 +324,27 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &6446230286757112332
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8155408345395792475}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3f0012983f13d54388d11ce4693e307, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  OrbPrefab: {fileID: 187177218195128111, guid: 9002a16f15e6ee446bab3350790bd25a, type: 3}
+  CooldownTime: 1
+  CanShoot: 1
+  ShootForce: 10
+  PlayerCamera: {fileID: 5057621881944050072}
+  OrbScale: 0
+  increase: 0.01
+  FirePoint: {fileID: 4256457574885109368}
+  PreExistingOrb: {fileID: 0}
 --- !u!1 &8601111013837982218
 GameObject:
   m_ObjectHideFlags: 0
@@ -375,4 +450,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 38e84d962f1dd2049a47950a9a51ae48, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mouseSensitivity: 100
+  mouseSensitivity: 20

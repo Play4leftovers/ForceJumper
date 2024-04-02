@@ -24,25 +24,14 @@ public class ForceFieldBehaviour : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        /*RaycastHit hit;
-        Ray ray = new Ray(transform.position + transform.localScale/2, Player.transform.forward);
-        Vector2 directionToTarget = transform.forward;*/
-
-        //Check if we hit something that we are supposed to hit.
-        // if (Physics.Raycast(ray, out hit, Mathf.Infinity, HitMask))
-        // {
-        //     Debug.Log("hit wall!");
-        //     GetComponent<Rigidbody>().isKinematic = true;
-        // }
-        
-        if (other.gameObject.CompareTag("Wall"))
+        if (other.gameObject.CompareTag("Wall") || other.gameObject.CompareTag("Ground"))
         {
-            Debug.Log("hit wall!");
+            Debug.Log("hit wall / ground!");
             GetComponent<Rigidbody>().isKinematic = true;
             AttachedToWall = true;
         }
         
-        if (other.gameObject.CompareTag("Orb"))
+        if (other.gameObject.CompareTag("ForceField"))
         {
             Destroy(other.gameObject);
         }
@@ -53,6 +42,7 @@ public class ForceFieldBehaviour : MonoBehaviour
             ImpactPoint = other.transform.position;
             GetComponent<Renderer>().material
                 .SetVector("_HitPosition", transform.InverseTransformPoint(ImpactPoint));
+            Destroy(other.gameObject);
         }
     }
 
