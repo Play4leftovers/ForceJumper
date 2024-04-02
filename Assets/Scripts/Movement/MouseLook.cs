@@ -31,7 +31,6 @@ public class MouseLook : MonoBehaviour
 
     public void Look(InputAction.CallbackContext context)
     {
-        Debug.Log("Hello look");
         _lookDir = context.ReadValue<Vector2>();
     }
 }
