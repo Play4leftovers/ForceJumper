@@ -14,9 +14,9 @@ GameObject:
   - component: {fileID: 5861173864077604162}
   - component: {fileID: 3560484859454161921}
   - component: {fileID: 82868332938448979}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: OrbPrefab
-  m_TagString: Untagged
+  m_TagString: ForceField
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
