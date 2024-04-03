@@ -491,6 +491,10 @@ PrefabInstance:
       value: 112
       objectReference: {fileID: 0}
     - target: {fileID: 6155039863854221801, guid: a61acf84942a40f4ea2b80a698bc2418, type: 3}
+      propertyPath: airDrag
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6155039863854221801, guid: a61acf84942a40f4ea2b80a698bc2418, type: 3}
       propertyPath: groundDrag
       value: 5
       objectReference: {fileID: 0}

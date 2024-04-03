@@ -10,20 +10,37 @@ public class PlayerMovementPhysics : MonoBehaviour
     private Vector2 _inputDir;
     
     [Header("Movement")]
-    [SerializeField] private float jumpForce = 10;
-    [SerializeField] private float accelerationSpeed = 10;
-    [SerializeField] private float maxSpeed = 8;
-    //[SerializeField] private float sprintMultiplier = 2;
-    [SerializeField] private Vector3 playerVelocity;
+    private float _maxSpeed;
+    private float _accelerationSpeed;
+    [SerializeField] private float sprintMaxSpeed = 12;
+    [SerializeField] private float walkMaxSpeed = 8;
+    [SerializeField] private float sprintAccelerationSpeed = 16;
+    [SerializeField] private float walkAccelerationSpeed = 10;
     [SerializeField] private float groundDrag;
     [SerializeField] private float airDrag;
-
-    [Header("Gravity")] 
+    [SerializeField] private float airSpeedMultiplier = 0.4f;
+    [SerializeField] private Vector3 playerVelocity;
+    [SerializeField] private bool sprinting = false;
+    
+    [Header("Jump")]
+    [SerializeField] private float jumpForce = 10;
+    [SerializeField] private bool doubleJump = false;
+    
+    [Header("Ground Check")] 
     public Transform groundCheck;
     public LayerMask groundMask;
     public float groundDistance = 0.4f;
 
     private bool _isGrounded;
+
+
+    public MovementState state;
+    public enum MovementState
+    {
+        Walking,
+        Sprinting,
+        Air
+    }
     
     void Start()
     {
@@ -34,12 +51,27 @@ public class PlayerMovementPhysics : MonoBehaviour
     public void Jump(InputAction.CallbackContext context)
     {
         if (!context.performed) return;
-        Debug.Log("Jump!");
+        
+        if(_isGrounded) _rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
+        else DoubleJump();
     }
-    
+
     public void Movement(InputAction.CallbackContext context)
     {
         _inputDir = context.ReadValue<Vector2>();
+    }
+
+    public void Sprint(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            sprinting = true;
+        }
+
+        if (context.canceled)
+        {
+            sprinting = false;
+        }
     }
     #endregion
 
@@ -48,11 +80,32 @@ public class PlayerMovementPhysics : MonoBehaviour
     {
         GroundCheck();
         SpeedControl();
+        StateHandler();
     }
 
     private void FixedUpdate()
     {
         MovePlayer();
+    }
+
+    private void StateHandler()
+    {
+        if (_isGrounded && sprinting)
+        {
+            state = MovementState.Sprinting;
+            _accelerationSpeed = sprintAccelerationSpeed;
+            _maxSpeed = sprintMaxSpeed;
+        }
+        else if (!_isGrounded)
+        {
+            state = MovementState.Air;
+        }
+        else
+        {
+            state = MovementState.Walking;
+            _accelerationSpeed = walkAccelerationSpeed;
+            _maxSpeed = walkMaxSpeed;
+        }
     }
     #endregion
 
@@ -63,6 +116,7 @@ public class PlayerMovementPhysics : MonoBehaviour
         if (_isGrounded)
         {
             _rb.drag = groundDrag;
+            if (doubleJump) doubleJump = false;
         }
         else
         {
@@ -75,16 +129,25 @@ public class PlayerMovementPhysics : MonoBehaviour
         var transform1 = transform;
         Vector3 moveDir = transform1.right * _inputDir.x + transform1.forward * _inputDir.y;
 
-        _rb.AddForce(moveDir * accelerationSpeed, ForceMode.Force);
+        if (_isGrounded) _rb.AddForce(moveDir * (_accelerationSpeed * 10), ForceMode.Force);
+        else _rb.AddForce(moveDir * (_accelerationSpeed * airSpeedMultiplier * 10), ForceMode.Force);
     }
 
     void SpeedControl()
     {
-        Vector3 flatVelocity = new Vector3(_rb.velocity.x, 0f, _rb.velocity.z);
-        if (flatVelocity.magnitude > maxSpeed)
+        var tempVelocity = _rb.velocity;
+        Vector3 flatVelocity = new Vector3(tempVelocity.x, 0f, tempVelocity.z);
+        if (flatVelocity.magnitude > _maxSpeed)
         {
-            Vector3 limitedVelocity = flatVelocity.normalized * maxSpeed;
+            Vector3 limitedVelocity = flatVelocity.normalized * _maxSpeed;
             _rb.velocity = new Vector3(limitedVelocity.x, _rb.velocity.y, limitedVelocity.z);
         }
+    }
+
+    void DoubleJump()
+    {
+        if (doubleJump) return;
+        _rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
+        doubleJump = true;
     }
 }
