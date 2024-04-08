@@ -51,8 +51,7 @@ public class PlayerMovementPhysics : MonoBehaviour
     {
         Walking,
         Air,
-        Dash,
-        AirDash
+        Dash
     }
     
     void Start()
@@ -64,7 +63,6 @@ public class PlayerMovementPhysics : MonoBehaviour
     #region Input Management
     public void Jump(InputAction.CallbackContext context)
     {
-        if (_inputStopper) return;
         if (context.performed)
         {
             _jumping = true;
@@ -82,7 +80,6 @@ public class PlayerMovementPhysics : MonoBehaviour
 
     public void Movement(InputAction.CallbackContext context)
     {
-        if (_inputStopper) return;
         _inputDir = context.ReadValue<Vector2>();
     }
 
@@ -122,11 +119,7 @@ public class PlayerMovementPhysics : MonoBehaviour
         {
             state = MovementState.Air;
         }
-        else if (!_isGrounded && _dashing)
-        {
-            state = MovementState.AirDash;
-        }
-        else if(_isGrounded && _dashing)
+        else if(_dashing)
         {
             state = MovementState.Dash;
         }
@@ -155,7 +148,8 @@ public class PlayerMovementPhysics : MonoBehaviour
     {
         var transform1 = transform;
         bool onSlope = OnSlope();
-        _moveDir = transform1.right * _inputDir.x + transform1.forward * _inputDir.y;
+        
+        if(!_inputStopper) _moveDir = transform1.right * _inputDir.x + transform1.forward * _inputDir.y;
         
         if (onSlope && !_exitingSlope)
         {
