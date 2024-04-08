@@ -745,8 +745,8 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6446230286757112332, guid: df44022817e53e4469ca675dc7e99bed, type: 3}
   m_PrefabInstance: {fileID: 1437166833}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
+  m_GameObject: {fileID: 1098417513}
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f3f0012983f13d54388d11ce4693e307, type: 3}
   m_Name: 
@@ -1699,6 +1699,11 @@ Transform:
   - {fileID: 636217178}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &897443606 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4256457574885109368, guid: df44022817e53e4469ca675dc7e99bed, type: 3}
+  m_PrefabInstance: {fileID: 1437166833}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &961815438
 GameObject:
   m_ObjectHideFlags: 0
@@ -1851,6 +1856,30 @@ MonoBehaviour:
   OrbSizeIndicator: {fileID: 683839187}
   ForceField: {fileID: 0}
   ShootingBehaviour: {fileID: 334679309}
+--- !u!1 &1098417513 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8155408345395792475, guid: df44022817e53e4469ca675dc7e99bed, type: 3}
+  m_PrefabInstance: {fileID: 1437166833}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1098417518
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1098417513}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d332d6ce6c2b0bd44a7bf116c92b692c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GrenadePrefab: {fileID: 7400503422306286148, guid: 7fe845b8eed439d4ea60a041bb9a72eb, type: 3}
+  OrbPrefab: {fileID: 187177218195128111, guid: 9002a16f15e6ee446bab3350790bd25a, type: 3}
+  FirePoint: {fileID: 897443606}
+  CurrentGrenade: {fileID: 0}
+  OrbScale: 6
+  PlayerCamera: {fileID: 1988840134}
+  ThrowForce: 12
 --- !u!1 &1156506626
 GameObject:
   m_ObjectHideFlags: 0
@@ -2441,6 +2470,10 @@ PrefabInstance:
       propertyPath: increase
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6446230286757112332, guid: df44022817e53e4469ca675dc7e99bed, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8155408345395792475, guid: df44022817e53e4469ca675dc7e99bed, type: 3}
       propertyPath: m_Name
       value: Player (1)
@@ -2449,10 +2482,33 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 7
       objectReference: {fileID: 0}
+    - target: {fileID: 8205581557579750301, guid: df44022817e53e4469ca675dc7e99bed, type: 3}
+      propertyPath: m_ActionEvents.Array.size
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8205581557579750301, guid: df44022817e53e4469ca675dc7e99bed, type: 3}
+      propertyPath: m_ActionEvents.Array.data[4].m_ActionId
+      value: 4b36cb68-ccc6-4055-a7f0-7b328b6071c7
+      objectReference: {fileID: 0}
+    - target: {fileID: 8205581557579750301, guid: df44022817e53e4469ca675dc7e99bed, type: 3}
+      propertyPath: m_ActionEvents.Array.data[4].m_ActionName
+      value: Player/Dash[/Keyboard/leftShift]
+      objectReference: {fileID: 0}
+    - target: {fileID: 8205581557579750301, guid: df44022817e53e4469ca675dc7e99bed, type: 3}
+      propertyPath: m_ActionEvents.Array.data[3].m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1098417518}
+    - target: {fileID: 8205581557579750301, guid: df44022817e53e4469ca675dc7e99bed, type: 3}
+      propertyPath: m_ActionEvents.Array.data[3].m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: GrenadeThrowing, Assembly-CSharp
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 8155408345395792475, guid: df44022817e53e4469ca675dc7e99bed, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1098417518}
   m_SourcePrefab: {fileID: 100100000, guid: df44022817e53e4469ca675dc7e99bed, type: 3}
 --- !u!1 &1478814298
 GameObject:
@@ -3161,6 +3217,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1987982750}
   m_CullTransparentMesh: 0
+--- !u!20 &1988840134 stripped
+Camera:
+  m_CorrespondingSourceObject: {fileID: 5057621881944050072, guid: df44022817e53e4469ca675dc7e99bed, type: 3}
+  m_PrefabInstance: {fileID: 1437166833}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2138152761
 GameObject:
   m_ObjectHideFlags: 0

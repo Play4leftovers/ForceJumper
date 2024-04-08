@@ -24,13 +24,6 @@ public class ForceFieldBehaviour : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Wall") || other.gameObject.CompareTag("Ground"))
-        {
-            Debug.Log("hit wall / ground!");
-            GetComponent<Rigidbody>().isKinematic = true;
-            AttachedToWall = true;
-        }
-        
         if (other.gameObject.CompareTag("ForceField"))
         {
             Destroy(other.gameObject);

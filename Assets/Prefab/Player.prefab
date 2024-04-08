@@ -293,6 +293,10 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 6932f414-d38f-43d2-ac5d-5821e19b2bb8
     m_ActionName: Player/Shoot[/Mouse/leftButton]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 4b36cb68-ccc6-4055-a7f0-7b328b6071c7
+    m_ActionName: Player/Dash[/Keyboard/leftShift]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
