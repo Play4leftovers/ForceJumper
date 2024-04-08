@@ -98,7 +98,7 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_LightingSettings: {fileID: 0}
+  m_LightingSettings: {fileID: 4890085278179872738, guid: 6cf2da61cb1a2da418f018100c90ae61, type: 2}
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -228,6 +228,17 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &406491902 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4869109604208848251, guid: a61acf84942a40f4ea2b80a698bc2418, type: 3}
+  m_PrefabInstance: {fileID: 1847266457}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d332d6ce6c2b0bd44a7bf116c92b692c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &699837586
 GameObject:
   m_ObjectHideFlags: 0
@@ -591,25 +602,33 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3739227438798264813, guid: a61acf84942a40f4ea2b80a698bc2418, type: 3}
-      propertyPath: m_Constraints
-      value: 112
+    - target: {fileID: 4869109604208848251, guid: a61acf84942a40f4ea2b80a698bc2418, type: 3}
+      propertyPath: ThrowForce
+      value: 90
       objectReference: {fileID: 0}
     - target: {fileID: 6155039863854221801, guid: a61acf84942a40f4ea2b80a698bc2418, type: 3}
-      propertyPath: airDrag
-      value: 0
+      propertyPath: dashingSpeed
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 6155039863854221801, guid: a61acf84942a40f4ea2b80a698bc2418, type: 3}
-      propertyPath: groundDrag
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 6155039863854221801, guid: a61acf84942a40f4ea2b80a698bc2418, type: 3}
-      propertyPath: accelerationSpeed
-      value: 100
+      propertyPath: dashingDuration
+      value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: 8155408345395792475, guid: a61acf84942a40f4ea2b80a698bc2418, type: 3}
       propertyPath: m_Name
       value: PlayerPhysicsMovement
+      objectReference: {fileID: 0}
+    - target: {fileID: 8205581557579750301, guid: a61acf84942a40f4ea2b80a698bc2418, type: 3}
+      propertyPath: m_ActionEvents.Array.data[3].m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 406491902}
+    - target: {fileID: 8205581557579750301, guid: a61acf84942a40f4ea2b80a698bc2418, type: 3}
+      propertyPath: m_ActionEvents.Array.data[3].m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: Shoot
+      objectReference: {fileID: 0}
+    - target: {fileID: 8205581557579750301, guid: a61acf84942a40f4ea2b80a698bc2418, type: 3}
+      propertyPath: m_ActionEvents.Array.data[3].m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: GrenadeThrowing, Assembly-CSharp
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -820,7 +839,7 @@ Transform:
   m_GameObject: {fileID: 1947569935}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0.17369996, w: 0.9847986}
-  m_LocalPosition: {x: -0.27, y: -1.56, z: -17.05}
+  m_LocalPosition: {x: -0.21, y: -1.58, z: -17.05}
   m_LocalScale: {x: 30.172367, y: 1, z: 13.898}
   m_ConstrainProportionsScale: 0
   m_Children: []

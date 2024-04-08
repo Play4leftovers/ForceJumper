@@ -156,7 +156,7 @@ GameObject:
   - component: {fileID: 3424131184101892743}
   - component: {fileID: 6155039863854221801}
   - component: {fileID: 8205581557579750301}
-  - component: {fileID: 6446230286757112332}
+  - component: {fileID: 4869109604208848251}
   - component: {fileID: 3739227438798264813}
   - component: {fileID: 2659376081702226085}
   m_Layer: 7
@@ -210,8 +210,8 @@ MonoBehaviour:
     m_Bits: 64
   groundDistance: 0.4
   maxSlopeAngle: 45
-  dashingDuration: 0.2
-  dashingSpeed: 2
+  dashingDuration: 1
+  dashingSpeed: 1
   dashingAcceleration: 15
   state: 0
 --- !u!114 &8205581557579750301
@@ -289,7 +289,7 @@ MonoBehaviour:
     m_ActionName: Player/Look[/Mouse/delta]
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 6446230286757112332}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: Shooting, Assembly-CSharp
         m_MethodName: Shoot
         m_Mode: 0
@@ -324,7 +324,7 @@ MonoBehaviour:
   m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
---- !u!114 &6446230286757112332
+--- !u!114 &4869109604208848251
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -333,19 +333,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 8155408345395792475}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f3f0012983f13d54388d11ce4693e307, type: 3}
+  m_Script: {fileID: 11500000, guid: d332d6ce6c2b0bd44a7bf116c92b692c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  GrenadePrefab: {fileID: 7400503422306286148, guid: 7fe845b8eed439d4ea60a041bb9a72eb, type: 3}
   OrbPrefab: {fileID: 187177218195128111, guid: 9002a16f15e6ee446bab3350790bd25a, type: 3}
-  CooldownTime: 1
-  CanShoot: 1
-  ShootForce: 10
-  PlayerCamera: {fileID: 5057621881944050072}
-  OrbScale: 0
-  MaxScale: 6
-  increase: 0.01
   FirePoint: {fileID: 4256457574885109368}
-  PreExistingOrb: {fileID: 0}
+  CurrentGrenade: {fileID: 0}
+  OrbScale: 0
+  PlayerCamera: {fileID: 5057621881944050072}
+  ThrowForce: 0
 --- !u!54 &3739227438798264813
 Rigidbody:
   m_ObjectHideFlags: 0
