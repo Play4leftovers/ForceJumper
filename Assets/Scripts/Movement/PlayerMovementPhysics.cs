@@ -3,19 +3,26 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Rendering;
 
 public class PlayerMovementPhysics : MonoBehaviour
 {
+    #region Variables
     private Rigidbody _rb;
     private Vector2 _inputDir;
     private Vector3 _moveDir;
+    private CapsuleCollider _capsuleCollider;
 
     private bool _inputStopper = false;
     
     [Header("Movement")]
     [SerializeField] private float maxSpeed = 8;
     [SerializeField] private float accelerationSpeed = 10;
+    
     private Vector3 _playerVelocity;
+    private float desiredMoveSpeed;
+    private float lastDesiredMoveSpeed;
+    
     
     [Header("Air and Ground Control")]
     [SerializeField] private float groundDrag;
@@ -46,24 +53,34 @@ public class PlayerMovementPhysics : MonoBehaviour
     [SerializeField] private float dashingSpeed = 2.5f; //Multiplier of maxSpeed
     [SerializeField] private float dashingAcceleration = 10.0f; //Multiplier of accelerationSpeed
 
+    [Header("Crouch Sliding")] 
+    [SerializeField] private float crouchSpeed = 0.5f; //Multiplier of maxSpeed
+    [SerializeField] private float crouchAcceleration = 0.75f; //Multiplier of accelerationSpeed
+    [SerializeField] private float crouchYScale = 0.5f;
+    private bool _crouching;
+
     public MovementState state;
     public enum MovementState
     {
         Walking,
         Air,
-        Dash
+        Dash,
+        Crouching,
+        Sliding
     }
+    #endregion
     
     void Start()
     {
         _rb = GetComponent<Rigidbody>();
-        _playerHeight = GetComponent<CapsuleCollider>().height;
+        _capsuleCollider = GetComponent<CapsuleCollider>();
+        _playerHeight  = _capsuleCollider.height;
     }
 
     #region Input Management
     public void Jump(InputAction.CallbackContext context)
     {
-        if (context.performed)
+        if (context.performed && !_crouching)
         {
             _jumping = true;
             if (state == MovementState.Air && doubleJump == false)
@@ -83,9 +100,33 @@ public class PlayerMovementPhysics : MonoBehaviour
         _inputDir = context.ReadValue<Vector2>();
     }
 
-    public void Dash(InputAction.CallbackContext context)
+    public void Crouch(InputAction.CallbackContext context)
     {
         if (context.performed && !_dashing)
+        {
+            _crouching = true;
+            maxSpeed *= crouchSpeed;
+            var tempGrounded = _isGrounded;
+            accelerationSpeed *= crouchAcceleration;
+            _capsuleCollider.height *= crouchYScale;
+            if (tempGrounded)
+            {
+                _rb.AddForce(Vector3.down * 5f, ForceMode.Impulse);
+            }
+        }
+
+        if (context.canceled)
+        {
+            _crouching = false;
+            maxSpeed /= crouchSpeed;
+            accelerationSpeed /= crouchAcceleration;
+            _capsuleCollider.height /= crouchYScale;
+        }
+    }
+
+    public void Dash(InputAction.CallbackContext context)
+    {
+        if (context.performed && !_dashing && (state != MovementState.Crouching))
         {
             _dashing = true;
             _inputStopper = true;
@@ -123,6 +164,10 @@ public class PlayerMovementPhysics : MonoBehaviour
         {
             state = MovementState.Dash;
         }
+        else if (_crouching)
+        {
+            state = MovementState.Crouching;
+        }
         else
         {
             state = MovementState.Walking;
@@ -130,6 +175,7 @@ public class PlayerMovementPhysics : MonoBehaviour
     }
     #endregion
 
+    #region Ground Check
     void GroundCheck()
     {
         _isGrounded = Physics.Raycast(transform.position, Vector3.down, _playerHeight*0.5f+0.3f, groundMask);
@@ -143,7 +189,9 @@ public class PlayerMovementPhysics : MonoBehaviour
             _rb.drag = airDrag;
         }
     }
+    #endregion
     
+    #region Movement and Speed Control
     void MovePlayer()
     {
         var transform1 = transform;
@@ -193,7 +241,9 @@ public class PlayerMovementPhysics : MonoBehaviour
             }
         }
     }
+    #endregion
     
+    #region Slope Control
     private Vector3 GetSlopeMoveDirection()
     {
         return Vector3.ProjectOnPlane(_moveDir, _slopeHit.normal).normalized;
@@ -209,7 +259,9 @@ public class PlayerMovementPhysics : MonoBehaviour
         }
         return false;
     }
-
+    #endregion
+    
+    #region Jumping and Dashing
     void JumpHandle()
     {
         if (_isGrounded && _readyToJump && _jumping)
@@ -239,7 +291,7 @@ public class PlayerMovementPhysics : MonoBehaviour
         _readyToJump = true;
         _exitingSlope = false;
     }
-
+    
     void StopDash()
     {
         maxSpeed /= dashingSpeed;
@@ -248,4 +300,5 @@ public class PlayerMovementPhysics : MonoBehaviour
         _inputStopper = false;
         _exitingSlope = true;
     }
+    #endregion
 }
