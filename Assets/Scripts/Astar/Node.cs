@@ -33,13 +33,25 @@ public class Node : MonoBehaviour
         List<Node> neighbors = new List<Node>();
 
         // Right
-        AddNeighbor(gridX + 1, gridY, neighbors);
+        if (gridX + 1 < Grid.Instance.gridSizeX)
+        {
+            AddNeighbor(gridX + 1, gridY, neighbors);
+        }
         // Left
-        AddNeighbor(gridX - 1, gridY, neighbors);
+        if (gridX - 1 >= 0)
+        {
+            AddNeighbor(gridX - 1, gridY, neighbors);
+        }
         // Up
-        AddNeighbor(gridX, gridY + 1, neighbors);
+        if (gridY + 1 < Grid.Instance.gridSizeY)
+        {
+            AddNeighbor(gridX, gridY + 1, neighbors);
+        }
         // Down
-        AddNeighbor(gridX, gridY - 1, neighbors);
+        if (gridY - 1 >= 0)
+        {
+            AddNeighbor(gridX, gridY - 1, neighbors);
+        }
 
         return neighbors;
     }
@@ -50,7 +62,7 @@ public class Node : MonoBehaviour
         if (x >= 0 && x < Grid.Instance.gridSizeX && y >= 0 && y < Grid.Instance.gridSizeY)
         {
             Node neighbor = Grid.Instance.grid[x, y].GetComponent<Node>();
-            if (neighbor.walkable)
+            if (neighbor.walkable && !neighbor.occupied && neighbor != null)
             {
                 neighbors.Add(neighbor);
             }

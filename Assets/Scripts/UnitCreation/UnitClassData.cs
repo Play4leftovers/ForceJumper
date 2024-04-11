@@ -31,8 +31,8 @@ public class UnitClassData : ScriptableObject
 
     public enum UnitType
     {
-        Melee,
-        Ranged
+        Static,
+        Mobile
     }
 
     public UnitType UnitMobilityType;

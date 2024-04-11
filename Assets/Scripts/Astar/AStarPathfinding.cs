@@ -39,7 +39,7 @@ public class AStarPathfinding : MonoBehaviour
             {
                 if (!neighbor.walkable || closedSet.Contains(neighbor))
                 {
-                    continue;
+                    continue; // Skip unwalkable or already evaluated nodes
                 }
 
                 int newCostToNeighbor = currentNode.gCost + GetDistance(currentNode, neighbor);

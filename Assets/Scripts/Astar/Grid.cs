@@ -64,7 +64,7 @@ public class Grid : MonoBehaviour
     {
         if (grid == null) return;
 
-        SelectTile();
+        //SelectTile();
 
         for (int i = 0; i < currentPath.Count; i++)
         {
@@ -78,101 +78,101 @@ public class Grid : MonoBehaviour
             }
         }
 
-        if (Input.GetMouseButtonDown(0))
-        {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
+        //if (Input.GetMouseButtonDown(0))
+        //{
+        //    Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        //    RaycastHit hit;
 
-            if (Physics.Raycast(ray, out hit))
-            {
-                GameObject clickedNode = hit.collider.gameObject;
+        //    if (Physics.Raycast(ray, out hit))
+        //    {
+        //        GameObject clickedNode = hit.collider.gameObject;
 
-                if (clickedNode.CompareTag("Node"))
-                {
-                    if (selectedNode != null)
-                    {
-                        List<Node> path = AStarPathfinding.FindPath(selectedNode, clickedNode, this);
+        //        if (clickedNode.CompareTag("Node"))
+        //        {
+        //            if (selectedNode != null)
+        //            {
+        //                List<Node> path = AStarPathfinding.FindPath(selectedNode, clickedNode, this);
 
-                        DeselectNodeGameObject(selectedNode);
+        //                DeselectNodeGameObject(selectedNode);
 
-                        Vector3 mousePosition = Input.mousePosition;
-                        mousePosition.z = Camera.main.transform.position.y;
-                        Vector3 targetPosition = Camera.main.ScreenToWorldPoint(mousePosition);
+        //                Vector3 mousePosition = Input.mousePosition;
+        //                mousePosition.z = Camera.main.transform.position.y;
+        //                Vector3 targetPosition = Camera.main.ScreenToWorldPoint(mousePosition);
 
 
-                        foreach (Node node in path)
-                        {
+        //                foreach (Node node in path)
+        //                {
 
-                        }
-                    }
+        //                }
+        //            }
 
-                    selectedNode = clickedNode;
-                    SelectNodeGameObject(selectedNode);
-                }
-            }
-        }
+        //            selectedNode = clickedNode;
+        //            SelectNodeGameObject(selectedNode);
+        //        }
+        //    }
+        //}
     }
 
-    void OnMouseEnter()
-    {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hit;
+    //void OnMouseEnter()
+    //{
+    //    Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+    //    RaycastHit hit;
 
-        if (Physics.Raycast(ray, out hit))
-        {
-            GameObject hoveredNode = hit.collider.gameObject;
+    //    if (Physics.Raycast(ray, out hit))
+    //    {
+    //        GameObject hoveredNode = hit.collider.gameObject;
 
-            if (hoveredNode.CompareTag("Node"))
-            {
-                hoveredNode.GetComponentInChildren<Renderer>().material.color = Color.yellow;
-            }
-        }
-    }
+    //        if (hoveredNode.CompareTag("Node"))
+    //        {
+    //            hoveredNode.GetComponentInChildren<Renderer>().material.color = Color.yellow;
+    //        }
+    //    }
+    //}
 
-    void OnMouseExit()
-    {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hit;
+    //void OnMouseExit()
+    //{
+    //    Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+    //    RaycastHit hit;
 
-        if (Physics.Raycast(ray, out hit))
-        {
-            GameObject exitedNode = hit.collider.gameObject;
+    //    if (Physics.Raycast(ray, out hit))
+    //    {
+    //        GameObject exitedNode = hit.collider.gameObject;
 
-            if (exitedNode.CompareTag("Node"))
-            {
-                exitedNode.GetComponentInChildren<Renderer>().material.color = Color.white;
-            }
-        }
-    }
+    //        if (exitedNode.CompareTag("Node"))
+    //        {
+    //            exitedNode.GetComponentInChildren<Renderer>().material.color = Color.white;
+    //        }
+    //    }
+    //}
 
-    public void SelectTile()
-    {
-        if (Input.GetMouseButtonDown(0))
-        {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
+    //public void SelectTile()
+    //{
+    //    if (Input.GetMouseButtonDown(0))
+    //    {
+    //        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+    //        RaycastHit hit;
 
-            if (Physics.Raycast(ray, out hit))
-            {
-                GameObject clickedNode = hit.collider.gameObject;
+    //        if (Physics.Raycast(ray, out hit))
+    //        {
+    //            GameObject clickedNode = hit.collider.gameObject;
 
-                if (clickedNode.CompareTag("Node") && unitIsSelected)
-                {
-                    selectedUnit.GetComponent<UnitMovement>().SetNewPosition(currentPath.LastOrDefault().gameObject);
-                    unitIsSelected = false;
-                }
+    //            if (clickedNode.CompareTag("Node") && unitIsSelected)
+    //            {
+    //                selectedUnit.GetComponent<UnitMovement>().SetNewPosition(currentPath.LastOrDefault().gameObject);
+    //                unitIsSelected = false;
+    //            }
 
-                if (clickedNode.CompareTag("Unit"))
-                {
-                    if (clickedNode != null)
-                    {
-                        selectedUnit = clickedNode.GetComponent<UnitMovement>().gameObject;
-                        unitIsSelected = true;
-                    }
-                }
-            }
-        }
-    }
+    //            if (clickedNode.CompareTag("Unit"))
+    //            {
+    //                if (clickedNode != null)
+    //                {
+    //                    selectedUnit = clickedNode.GetComponent<UnitMovement>().gameObject;
+    //                    unitIsSelected = true;
+    //                }
+    //            }
+    //        }
+    //    }
+    //}
 
     public void SelectRandomTile()
     {
@@ -181,16 +181,33 @@ public class Grid : MonoBehaviour
             GameObject StartNode = currentPath[currentPath.Count - 1].gameObject;
             GameObject EndNode = allTiles[Random.Range(0, allTiles.Count)].gameObject;
 
-            AStarPathfinding.FindPath(StartNode, EndNode, gridReference);
+            if (EndNode.GetComponent<Node>().walkable)
+            {
+                AStarPathfinding.FindPath(StartNode, EndNode, gridReference);
+            }
         }
         else
         {
             GameObject StartNode = allTiles[Random.Range(0, allTiles.Count)].gameObject;
             GameObject EndNode = allTiles[Random.Range(0, allTiles.Count)].gameObject;
 
-            AStarPathfinding.FindPath(StartNode, EndNode, gridReference);
+            if (EndNode.GetComponent<Node>().walkable)
+            {
+                AStarPathfinding.FindPath(StartNode, EndNode, gridReference);
+            }
         }
 
+    }
+
+    public void RemoveNode(Node node, List<Node> knownNeighbors)
+    {
+        List<Node> neighbors = node.GetNeighbors();
+        foreach (Node neighbor in neighbors)
+        {
+            neighbors.Remove(node);
+        }
+
+        grid[node.gridX, node.gridY] = null;
     }
 
     void CreateGrid()
@@ -203,10 +220,25 @@ public class Grid : MonoBehaviour
             for (int y = 0; y < gridSizeY; y++)
             {
                 Vector3 worldPoint = gridStartPosition + Vector3.right * (x * nodeDiameter + nodeSize) + Vector3.forward * (y * nodeDiameter + nodeSize);
-                bool walkable = !(Physics.CheckSphere(worldPoint, nodeSize));
+                Collider[] colliders = Physics.OverlapSphere(worldPoint, nodeSize);
+                bool walkable = true;
+                foreach (Collider col in colliders)
+                {
+                    if (col.CompareTag("Obstacle"))
+                    {
+                        walkable = false;
+                    }
+                }
 
                 GameObject tile = Instantiate(TileObject, worldPoint, Quaternion.identity);
                 Node node = tile.GetComponent<Node>();
+                node.walkable = walkable;
+
+                if (!node.walkable)
+                {
+                    tile.GetComponentInChildren<Renderer>().material.color = Color.blue;
+                }
+
                 node.gridX = x;
                 node.gridY = y;
                 node.worldPosition = worldPoint;

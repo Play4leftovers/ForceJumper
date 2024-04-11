@@ -100,6 +100,11 @@ public class EnemyBase : MonoBehaviour
 
     void Update()
     {
+        if (unitData.UnitMobilityType == UnitClassData.UnitType.Mobile)
+        {
+            Patrol();
+        }
+
         CheckLoS();
 
         if (InLineOfSight)
@@ -121,6 +126,11 @@ public class EnemyBase : MonoBehaviour
                 lockedOn = false;
             }
         }
+    }
+
+    private void Patrol()
+    {
+
     }
 
     // Rolls a number between 0.1 - 1.0. If the rolled number is less or equal to the growth rate, the unit receives a point in that respective stat. Else, nothing happens.

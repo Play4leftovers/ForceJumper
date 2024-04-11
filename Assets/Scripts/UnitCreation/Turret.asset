@@ -30,4 +30,4 @@ MonoBehaviour:
   aimGrowth: 0.174
   reflexesGrowth: 0.285
   attackSpeedGrowth: 0.227
-  UnitMobilityType: 1
+  UnitMobilityType: 0
