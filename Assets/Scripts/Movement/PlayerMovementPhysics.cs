@@ -137,7 +137,7 @@ public class PlayerMovementPhysics : MonoBehaviour
         }
     }
     #endregion
-
+    
     #region Updates
     private void Update()
     {
@@ -152,7 +152,7 @@ public class PlayerMovementPhysics : MonoBehaviour
         MovePlayer();
     }
     #endregion
-
+    
     #region StateHandler
     private void StateHandler()
     {
@@ -174,7 +174,7 @@ public class PlayerMovementPhysics : MonoBehaviour
         }
     }
     #endregion
-
+    
     #region Ground Check
     void GroundCheck()
     {
