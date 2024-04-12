@@ -6,83 +6,144 @@ using UnityEngine.AI;
 
 public class EnemyBase : MonoBehaviour
 {
+    [Header("Enemy Data")]
     public UnitClassData unitData;
-    [SerializeField] private Transform player;
-    [SerializeField] private Animator enemyAnimator;
-    [SerializeField] private NavMeshAgent EnemyNavMeshAgent;
 
-    public GameObject[] ItemsDropped;
+    [Header("Stats and Attributes")]
 
-    [SerializeField] private AudioSource EnemyAudioSource;
+    [SerializeField] private int Level;
 
-    [SerializeField] private GameObject playerCharacter;
-    [SerializeField] private GameObject enemyBody;
+    [SerializeField] private int Health = 0;
+    [SerializeField] private int Damage = 0;
+    [SerializeField] private int Intelligence = 0;
+    [SerializeField] private int MovementSpeed = 0;
+    [SerializeField] private int Accuracy = 0;
+    [SerializeField] private int Reflexes = 0;
+    [SerializeField] private int AttackSpeed = 0;
+
+    [Header("Vision and Field of View")]
 
     [SerializeField] private Collider Proximity;
 
-    public Collider EnemyCollider;
-
-    [SerializeField] private ParticleSystem BloodParticles;
-
-    [SerializeField] private GameObject DeathGore;
-
     [Range(0, 360)]
     public float viewAngle;
+    public float baseViewAngle;
+
+    public float lockOnThreshold = 2f;
 
     public float coneRadius = 2.0f;
     public float coneLength = 5.0f;
 
-    private LayerMask hitMask;
-    private LayerMask blockedMask;
+    public bool lockedOn;
+    public bool canBeHarmed;
+    public bool StartCheckingLoS;
+
+    public LayerMask hitMask;
+    public LayerMask blockedMask;
+    public Quaternion targetRotation;
 
     public float rotationSpeed = 5f;
-
     private bool rotating = false;
-    private Quaternion targetRotation;
 
-    public List<SkinnedMeshRenderer> renderers = new List<SkinnedMeshRenderer>();
+    [Header("Logistics")]
+
+    public Transform player;
+    public GameObject playerCharacter;
+    public Collider EnemyCollider;
 
     private bool dead;
     private bool InRange = false;
     private bool InLineOfSight;
     private bool CanMove = false;
-    private Transform _targetPosition;
 
-    private float MeleeRange = 5f;
-
-    public float firingRate;
-    public bool lockedOn;
-    public bool canBeHarmed;
-    public bool StartCheckingLoS;
-    public bool stealthed;
-    public float cooldown;
-    public float soundVolume = 0.5f;
-    private int EnemyDamage = 10;
-    public float Health = 10f;
     private float refreshRate = 0.5f;
-    public float NormalMovementSpeed = 9f;
-    private float MovementSpeed = 9f;
+
     private bool isAttacking = false;
 
     void Start()
     {
-        InvokeRepeating("CheckLoS", refreshRate, refreshRate);
+        //InvokeRepeating("CheckLoS", refreshRate, refreshRate);
+
+        SetupEnemyProperties();
+        SetUpLevelScaling();
+    }
+
+    void SetupEnemyProperties()
+    {
+        Health = unitData.defaultHealth;
+        Damage = unitData.defaultPower;
+        Intelligence = unitData.defaultIntelligence;
+        MovementSpeed = unitData.defaultSpeed;
+        Accuracy = unitData.defaultAim;
+        Reflexes = unitData.defaultReflexes;
+        AttackSpeed = unitData.defaultAttackSpeed;
+
+        rotationSpeed = Reflexes;
+        coneRadius = Intelligence * 10;
+        viewAngle = baseViewAngle + (Intelligence * 4);
+
+    }
+
+    void SetUpLevelScaling()
+    {
+        for (int i = 1; i <= Level; i++)
+        {
+            Health = CalculateStatWithGrowth(Health, unitData.healthGrowth);
+            Damage = CalculateStatWithGrowth(Damage, unitData.powerGrowth);
+            Intelligence = CalculateStatWithGrowth(Intelligence, unitData.intelligenceGrowth);
+            MovementSpeed = CalculateStatWithGrowth(MovementSpeed, unitData.speedGrowth);
+            Accuracy = CalculateStatWithGrowth(Accuracy, unitData.aimGrowth);
+            Reflexes = CalculateStatWithGrowth(Reflexes, unitData.reflexesGrowth);
+            AttackSpeed = CalculateStatWithGrowth(AttackSpeed, unitData.attackSpeedGrowth);
+        }
     }
 
     void Update()
     {
+        if (unitData.UnitMobilityType == UnitClassData.UnitType.Mobile)
+        {
+            Patrol();
+        }
+
+        CheckLoS();
+
         if (InLineOfSight)
         {
             transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
 
-            if (Quaternion.Angle(transform.rotation, targetRotation) < 0.1f)
+            if (Quaternion.Angle(transform.rotation, targetRotation) < lockOnThreshold)
             {
                 rotating = false;
                 lockedOn = true;
 
+                Debug.Log("ROTATING TO TARGET");
+
                 // Start Shooting
             }
+            else
+            {
+                rotating = true;
+                lockedOn = false;
+            }
         }
+    }
+
+    private void Patrol()
+    {
+
+    }
+
+    // Rolls a number between 0.1 - 1.0. If the rolled number is less or equal to the growth rate, the unit receives a point in that respective stat. Else, nothing happens.
+    private int CalculateStatWithGrowth(int baseStat, float growthRate)
+    {
+        float randomValue = Random.value;
+
+        if (randomValue <= growthRate)
+        {
+            return baseStat + 1;
+        }
+
+        return baseStat;
     }
 
     public IEnumerator ShootCoroutine()
@@ -90,13 +151,13 @@ public class EnemyBase : MonoBehaviour
         while (lockedOn)
         {
             // pew pew
-            yield return new WaitForSeconds(firingRate);
+            yield return new WaitForSeconds(AttackSpeed);
         }
     }
 
     public void OnTriggerEnter(Collider other)
     {
-        if (Proximity)
+        if (other.gameObject.CompareTag("Player"))
         {
             StartCheckingLoS = true;
         }
@@ -104,7 +165,7 @@ public class EnemyBase : MonoBehaviour
 
     public void OnTriggerStay(Collider other)
     {
-        if (Proximity)
+        if (other.gameObject.CompareTag("Player"))
         {
             StartCheckingLoS = true;
         }
@@ -112,9 +173,9 @@ public class EnemyBase : MonoBehaviour
 
     public void OnTriggerExit(Collider other)
     {
-        if (Proximity)
+        if (other.gameObject.CompareTag("Player"))
         {
-            StartCheckingLoS = true;
+            StartCheckingLoS = false;
             lockedOn = false;
         }
     }
@@ -132,9 +193,9 @@ public class EnemyBase : MonoBehaviour
                     var target = hitCollider.GetComponent<PlayerMovement>();
                     Transform targetTransform = hitCollider.GetComponent<Transform>();
                     Vector3 targetDirection = (targetTransform.position - transform.position).normalized;
-
                     if (Vector3.Angle(transform.forward, targetDirection) < viewAngle / 2 && target || Vector3.Angle(transform.forward, targetDirection) < viewAngle / 2 && target)
                     {
+
                         float distanceToTarget = Vector3.Distance(transform.position, targetTransform.position);
 
                         if (!Physics.Raycast(transform.position, targetDirection, distanceToTarget, blockedMask))

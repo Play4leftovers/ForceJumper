@@ -17,6 +17,7 @@ public class UnitClassData : ScriptableObject
     public int defaultSpeed;
     public int defaultAim;
     public int defaultReflexes;
+    public int defaultAttackSpeed;
 
     [Header("Growth Rates")]
 
@@ -26,11 +27,12 @@ public class UnitClassData : ScriptableObject
     [Range(0, 1)] public float speedGrowth;
     [Range(0, 1)] public float aimGrowth;
     [Range(0, 1)] public float reflexesGrowth;
+    [Range(0, 1)] public float attackSpeedGrowth;
 
     public enum UnitType
     {
-        Melee,
-        Ranged
+        Static,
+        Mobile
     }
 
     public UnitType UnitMobilityType;
