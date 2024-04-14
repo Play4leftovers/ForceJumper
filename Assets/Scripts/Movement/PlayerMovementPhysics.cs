@@ -19,11 +19,13 @@ public class PlayerMovementPhysics : MonoBehaviour
     [SerializeField] private float maxSpeed = 8;
     [SerializeField] private float accelerationForce = 10;
     [SerializeField] private float speedChangeMultiplier = 2.5f;
-    [SerializeField] private float slopeSpeedChangeMultiplier = 1.5f;
+    [SerializeField] private float slopeSpeedChangeMultiplier = 7.5f;
     private float _floatingMaxSpeed;
     private Vector3 _playerVelocity;
     private float _desiredMoveSpeed;
     private float _lastDesiredMoveSpeed;
+    private float _stateAcceleration;
+    private float _lastStateAcceleration;
     private const float SpeedChangeThreshold = 4f;
 
     [Header("Air and Ground Control")]
@@ -190,7 +192,7 @@ public class PlayerMovementPhysics : MonoBehaviour
         else
         {
             state = MovementState.Standing;
-            _desiredMoveSpeed = 0;
+            _desiredMoveSpeed = 8;
         }
 
         if (Mathf.Abs(_desiredMoveSpeed - _lastDesiredMoveSpeed) > SpeedChangeThreshold)
@@ -211,7 +213,7 @@ public class PlayerMovementPhysics : MonoBehaviour
     void GroundCheck()
     {
         _isGrounded = Physics.Raycast(transform.position, Vector3.down, _playerHeight*0.5f+0.3f, groundMask);
-        if (_isGrounded || state != MovementState.Dash)
+        if (_isGrounded && state != MovementState.Dash)
         {
             _rb.drag = groundDrag;
             if (doubleJump) doubleJump = false;
@@ -246,10 +248,6 @@ public class PlayerMovementPhysics : MonoBehaviour
     {
         var transform1 = transform;
         
-        //if(!_inputStopper && _inputDir.magnitude != 0) _moveDir = transform1.right * _inputDir.x + transform1.forward * _inputDir.y;
-        //Currently unusable. Intended to make you continue moving even when not holding down a key as if to slow down to standing still rather than stopping on a dime.
-        //It works, but does not feel good. Current problem is that directional momentum is not maintained.
-        
         if(!_inputStopper) _moveDir = transform1.right * _inputDir.x + transform1.forward * _inputDir.y;
         if (onSlope && !_exitingSlope)
         {
@@ -260,7 +258,7 @@ public class PlayerMovementPhysics : MonoBehaviour
             } 
         }
         
-        else switch (_isGrounded)
+        else switch (_isGrounded || _dashing)
         {
             case true:
                 _rb.AddForce(_moveDir * (_floatingMaxSpeed * accelerationForce), ForceMode.Force);

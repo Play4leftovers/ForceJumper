@@ -135,9 +135,9 @@ GameObject:
   - component: {fileID: 335303538}
   - component: {fileID: 335303537}
   - component: {fileID: 335303536}
-  m_Layer: 6
+  m_Layer: 3
   m_Name: Cube
-  m_TagString: Untagged
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -251,9 +251,9 @@ GameObject:
   - component: {fileID: 699837589}
   - component: {fileID: 699837588}
   - component: {fileID: 699837587}
-  m_Layer: 6
+  m_Layer: 3
   m_Name: Cube (1)
-  m_TagString: Untagged
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -356,9 +356,9 @@ GameObject:
   - component: {fileID: 1119764633}
   - component: {fileID: 1119764632}
   - component: {fileID: 1119764631}
-  m_Layer: 6
+  m_Layer: 3
   m_Name: Cube (2)
-  m_TagString: Untagged
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -461,9 +461,9 @@ GameObject:
   - component: {fileID: 1662279481}
   - component: {fileID: 1662279480}
   - component: {fileID: 1662279479}
-  m_Layer: 6
+  m_Layer: 3
   m_Name: Cube (4)
-  m_TagString: Untagged
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -562,17 +562,21 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2902689958648696169, guid: a61acf84942a40f4ea2b80a698bc2418, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3424131184101892743, guid: a61acf84942a40f4ea2b80a698bc2418, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 5.7556324
+      value: -57.62
       objectReference: {fileID: 0}
     - target: {fileID: 3424131184101892743, guid: a61acf84942a40f4ea2b80a698bc2418, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.6
+      value: 46.36
       objectReference: {fileID: 0}
     - target: {fileID: 3424131184101892743, guid: a61acf84942a40f4ea2b80a698bc2418, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 4.575451
+      value: -29.9
       objectReference: {fileID: 0}
     - target: {fileID: 3424131184101892743, guid: a61acf84942a40f4ea2b80a698bc2418, type: 3}
       propertyPath: m_LocalRotation.w
@@ -606,6 +610,14 @@ PrefabInstance:
       propertyPath: m_Mass
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 4256457574885109368, guid: a61acf84942a40f4ea2b80a698bc2418, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4441992449541155255, guid: a61acf84942a40f4ea2b80a698bc2418, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4869109604208848251, guid: a61acf84942a40f4ea2b80a698bc2418, type: 3}
       propertyPath: ThrowForce
       value: 90
@@ -622,9 +634,25 @@ PrefabInstance:
       propertyPath: accelerationForce
       value: 10
       objectReference: {fileID: 0}
+    - target: {fileID: 6155039863854221801, guid: a61acf84942a40f4ea2b80a698bc2418, type: 3}
+      propertyPath: groundMask.m_Bits
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 6155039863854221801, guid: a61acf84942a40f4ea2b80a698bc2418, type: 3}
+      propertyPath: slopeSpeedChangeMultiplier
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 8155408345395792475, guid: a61acf84942a40f4ea2b80a698bc2418, type: 3}
       propertyPath: m_Name
       value: PlayerPhysicsMovement
+      objectReference: {fileID: 0}
+    - target: {fileID: 8155408345395792475, guid: a61acf84942a40f4ea2b80a698bc2418, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8155408345395792475, guid: a61acf84942a40f4ea2b80a698bc2418, type: 3}
+      propertyPath: m_TagString
+      value: Player
       objectReference: {fileID: 0}
     - target: {fileID: 8205581557579750301, guid: a61acf84942a40f4ea2b80a698bc2418, type: 3}
       propertyPath: m_ActionEvents.Array.data[3].m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -637,6 +665,10 @@ PrefabInstance:
     - target: {fileID: 8205581557579750301, guid: a61acf84942a40f4ea2b80a698bc2418, type: 3}
       propertyPath: m_ActionEvents.Array.data[3].m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
       value: GrenadeThrowing, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 8601111013837982218, guid: a61acf84942a40f4ea2b80a698bc2418, type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -655,9 +687,9 @@ GameObject:
   - component: {fileID: 1891652400}
   - component: {fileID: 1891652399}
   - component: {fileID: 1891652398}
-  m_Layer: 6
+  m_Layer: 3
   m_Name: Cube (5)
-  m_TagString: Untagged
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -760,9 +792,9 @@ GameObject:
   - component: {fileID: 1947569938}
   - component: {fileID: 1947569937}
   - component: {fileID: 1947569936}
-  m_Layer: 6
+  m_Layer: 3
   m_Name: Cube (3)
-  m_TagString: Untagged
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

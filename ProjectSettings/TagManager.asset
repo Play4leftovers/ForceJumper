@@ -3,23 +3,19 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-<<<<<<< Updated upstream
-  tags: []
-=======
   tags:
+  - ForceField
   - Wall
   - NonAttachable
   - Ground
-  - ForceField
   - Bullet
   - Node
   - Obstacle
->>>>>>> Stashed changes
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Ground
   - Water
   - UI
   - 
