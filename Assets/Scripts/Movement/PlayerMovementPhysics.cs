@@ -19,13 +19,10 @@ public class PlayerMovementPhysics : MonoBehaviour
     [SerializeField] private float maxSpeed = 8;
     [SerializeField] private float accelerationForce = 10;
     [SerializeField] private float speedChangeMultiplier = 2.5f;
-    [SerializeField] private float slopeSpeedChangeMultiplier = 7.5f;
     private float _floatingMaxSpeed;
     private Vector3 _playerVelocity;
     private float _desiredMoveSpeed;
     private float _lastDesiredMoveSpeed;
-    private float _stateAcceleration;
-    private float _lastStateAcceleration;
     private const float SpeedChangeThreshold = 4f;
 
     [Header("Air and Ground Control")]
@@ -37,7 +34,7 @@ public class PlayerMovementPhysics : MonoBehaviour
     [SerializeField] private float jumpForce = 10;
     [SerializeField] private bool doubleJump = false;
     [SerializeField] private float jumpCooldown = 0.3f;
-    private bool _jumping = false;
+    private bool _jumping;
     private bool _readyToJump = true;
 
     [Header("Ground Check")] 
@@ -55,15 +52,22 @@ public class PlayerMovementPhysics : MonoBehaviour
     [Header("Dashing")] 
     [SerializeField] private float dashingDuration = 0.1f;
     [SerializeField] private float dashingSpeed = 2.5f; //Multiplier of maxSpeed
+    [SerializeField] private float dashingSpeedChangeMultiplier = 40;
     private bool _dashing;
-
+    private bool _keepMomentum;
+    private float _preDashFloatingMaxSpeed;
+    
     [Header("Crouch and Sliding")] 
     [SerializeField] private float crouchSpeed = 0.5f; //Multiplier of maxSpeed
     [SerializeField] private float slopeSlideSpeed = 3f; //Multiplier of maxSpeed
     [SerializeField] private float crouchYScale = 0.5f;
+    [SerializeField] private float slopeSpeedChangeMultiplier = 7.5f;
     private bool _crouching;
 
     public MovementState state;
+    private MovementState _previousState;
+    private MovementState _lastFrameState;
+    
     public enum MovementState
     {
         Standing,
@@ -132,10 +136,9 @@ public class PlayerMovementPhysics : MonoBehaviour
         if (context.performed && !_dashing && !_crouching)
         {
             _dashing = true;
+            _preDashFloatingMaxSpeed = _floatingMaxSpeed;
             _inputStopper = true;
             _exitingSlope = true;
-            _desiredMoveSpeed = maxSpeed * dashingSpeed;
-            _floatingMaxSpeed = _desiredMoveSpeed;
             Invoke(nameof(StopDash), dashingDuration);
         }
     }
@@ -160,40 +163,50 @@ public class PlayerMovementPhysics : MonoBehaviour
     #region StateHandler
     private void StateHandler()
     {
-        if (!_isGrounded && !_dashing)
+        _lastFrameState = state;
+        //State - Dashing
+        if(_dashing)
+        {
+            state = MovementState.Dash;
+            _desiredMoveSpeed = maxSpeed * dashingSpeed;
+        }
+        //State - Air
+        else if (!_isGrounded)
         {
             state = MovementState.Air;
             _desiredMoveSpeed = maxSpeed;
         }
-        else if(_dashing)
-        {
-            state = MovementState.Dash;
-        }
+        //State - Sliding Slope
         else if (_crouching && onSlope)
         {
             state = MovementState.Sliding;
             _desiredMoveSpeed = maxSpeed * slopeSlideSpeed;
         }
+        //State - Sliding Crouch
         else if (_crouching && (_floatingMaxSpeed > _desiredMoveSpeed))
         {
             state = MovementState.Sliding;
             _desiredMoveSpeed = maxSpeed * crouchSpeed;
         }
+        //State - Crouch
         else if (_crouching)
         {
             state = MovementState.Crouching;
             _desiredMoveSpeed = maxSpeed * crouchSpeed;
         }
+        //State - Walking
         else if (_inputDir.magnitude != 0)
         {
             state = MovementState.Walking;
             _desiredMoveSpeed = maxSpeed;
         }
+        //State - Standing
         else
         {
             state = MovementState.Standing;
-            _desiredMoveSpeed = 8;
+            _desiredMoveSpeed = maxSpeed;
         }
+        
 
         if (Mathf.Abs(_desiredMoveSpeed - _lastDesiredMoveSpeed) > SpeedChangeThreshold)
         {
@@ -206,6 +219,10 @@ public class PlayerMovementPhysics : MonoBehaviour
         }
         
         _lastDesiredMoveSpeed = _desiredMoveSpeed;
+        if (_lastFrameState != state)
+        {
+            _previousState = _lastFrameState;
+        }
     }
     #endregion
     
@@ -213,7 +230,7 @@ public class PlayerMovementPhysics : MonoBehaviour
     void GroundCheck()
     {
         _isGrounded = Physics.Raycast(transform.position, Vector3.down, _playerHeight*0.5f+0.3f, groundMask);
-        if (_isGrounded && state != MovementState.Dash)
+        if (_isGrounded && state is not (MovementState.Dash or MovementState.Sliding))
         {
             _rb.drag = groundDrag;
             if (doubleJump) doubleJump = false;
@@ -299,7 +316,7 @@ public class PlayerMovementPhysics : MonoBehaviour
         }
     }
 
-    private IEnumerator SmoothLerpMoveSpeed() //Requires rework as it is too slow in its changes
+    private IEnumerator SmoothLerpMoveSpeed()
     {
         float time = 0;
         float diff = Mathf.Abs(_desiredMoveSpeed - _floatingMaxSpeed);
@@ -313,7 +330,11 @@ public class PlayerMovementPhysics : MonoBehaviour
             {
                 float slopeAngle = Vector3.Angle(Vector3.up, _slopeHit.normal);
                 float slopeAngleIncrease = 1 + (slopeAngle / 90f);
-                time += Time.deltaTime * slopeSpeedChangeMultiplier * slopeAngleIncrease;
+                time += Time.deltaTime * slopeSpeedChangeMultiplier * speedChangeMultiplier * slopeAngleIncrease;
+            }
+            else if (_dashing || _previousState == MovementState.Dash)
+            {
+                time += Time.deltaTime * speedChangeMultiplier * dashingSpeedChangeMultiplier;
             }
             else
             {
@@ -359,9 +380,7 @@ public class PlayerMovementPhysics : MonoBehaviour
     
     void StopDash()
     {
-        _desiredMoveSpeed = maxSpeed;
-        _floatingMaxSpeed = _desiredMoveSpeed;
-        //Temporary fix to allow for rapid dashes. Will implement gradual decrease in speed to make it feel less jerky
+        _desiredMoveSpeed = _preDashFloatingMaxSpeed;
         _dashing = false;
         _inputStopper = false;
         _exitingSlope = false;

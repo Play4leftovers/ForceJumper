@@ -568,11 +568,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3424131184101892743, guid: a61acf84942a40f4ea2b80a698bc2418, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -57.62
+      value: 12.7
       objectReference: {fileID: 0}
     - target: {fileID: 3424131184101892743, guid: a61acf84942a40f4ea2b80a698bc2418, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 46.36
+      value: 4.3
       objectReference: {fileID: 0}
     - target: {fileID: 3424131184101892743, guid: a61acf84942a40f4ea2b80a698bc2418, type: 3}
       propertyPath: m_LocalPosition.z
@@ -623,8 +623,16 @@ PrefabInstance:
       value: 90
       objectReference: {fileID: 0}
     - target: {fileID: 6155039863854221801, guid: a61acf84942a40f4ea2b80a698bc2418, type: 3}
+      propertyPath: maxSpeed
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 6155039863854221801, guid: a61acf84942a40f4ea2b80a698bc2418, type: 3}
+      propertyPath: crouchSpeed
+      value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 6155039863854221801, guid: a61acf84942a40f4ea2b80a698bc2418, type: 3}
       propertyPath: dashingSpeed
-      value: 4
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 6155039863854221801, guid: a61acf84942a40f4ea2b80a698bc2418, type: 3}
       propertyPath: dashingDuration
@@ -632,15 +640,35 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6155039863854221801, guid: a61acf84942a40f4ea2b80a698bc2418, type: 3}
       propertyPath: accelerationForce
-      value: 10
+      value: 13
       objectReference: {fileID: 0}
     - target: {fileID: 6155039863854221801, guid: a61acf84942a40f4ea2b80a698bc2418, type: 3}
       propertyPath: groundMask.m_Bits
       value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 6155039863854221801, guid: a61acf84942a40f4ea2b80a698bc2418, type: 3}
+      propertyPath: dashStateAcceleration
+      value: 26
+      objectReference: {fileID: 0}
+    - target: {fileID: 6155039863854221801, guid: a61acf84942a40f4ea2b80a698bc2418, type: 3}
+      propertyPath: speedChangeMultiplier
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6155039863854221801, guid: a61acf84942a40f4ea2b80a698bc2418, type: 3}
+      propertyPath: crouchStateAcceleration
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 6155039863854221801, guid: a61acf84942a40f4ea2b80a698bc2418, type: 3}
       propertyPath: slopeSpeedChangeMultiplier
-      value: 5
+      value: 2.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6155039863854221801, guid: a61acf84942a40f4ea2b80a698bc2418, type: 3}
+      propertyPath: slopeSlideStateAcceleration
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 6155039863854221801, guid: a61acf84942a40f4ea2b80a698bc2418, type: 3}
+      propertyPath: dashingSpeedChangeMultiplier
+      value: 70
       objectReference: {fileID: 0}
     - target: {fileID: 8155408345395792475, guid: a61acf84942a40f4ea2b80a698bc2418, type: 3}
       propertyPath: m_Name
