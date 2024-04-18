@@ -54,13 +54,20 @@ public class GrenadeThrowing : MonoBehaviour
 
     public void SpawnForceField()
     {
-        GameObject newOrb = Instantiate(OrbPrefab, CurrentGrenade.transform.position, Quaternion.identity);
-        newOrb.GetComponent<ForceFieldBehaviour>().AttachedToWall = false;
-        //GameManager.instance.CurrentOrb = newOrb.GetComponent<ForceFieldBehaviour>();
-        var localScale = newOrb.transform.localScale;
+        GameObject newForceField = Instantiate(OrbPrefab, CurrentGrenade.transform.position, Quaternion.identity);
+        
+        ForceFieldBehaviour forceFieldScript = newForceField.GetComponent<ForceFieldBehaviour>();
+
+        forceFieldScript.AttachedToWall = false;
+        forceFieldScript.Type = ForceFieldBehaviour.ShieldType.Free;
+        forceFieldScript.Owner = gameObject;
+
+        //GameManager.instance.CurrentOrb = newForceField.GetComponent<ForceFieldBehaviour>();
+        var localScale = newForceField.transform.localScale;
         localScale *= OrbScale;
-        newOrb.transform.localScale = localScale;
-        newOrb.GetComponent<ForceFieldBehaviour>().Size = localScale * OrbScale;
+        newForceField.transform.localScale = localScale;
+        newForceField.GetComponent<ForceFieldBehaviour>().Size = localScale * OrbScale;
+        
         Destroy(CurrentGrenade.gameObject);
         CurrentGrenade = null;
         grenadeShot = false;

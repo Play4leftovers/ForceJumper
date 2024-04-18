@@ -53,16 +53,16 @@ public class Shooting : MonoBehaviour
             
             if (Physics.Raycast(ray, out hit, Mathf.Infinity))
             {
-                GameObject newOrb = Instantiate(OrbPrefab, FirePoint.transform.position, Quaternion.identity);
-                newOrb.GetComponent<ForceFieldBehaviour>().AttachedToWall = false;
-                //GameManager.instance.CurrentOrb = newOrb.GetComponent<ForceFieldBehaviour>();
-                var localScale = newOrb.transform.localScale;
+                GameObject newForceField = Instantiate(OrbPrefab, FirePoint.transform.position, Quaternion.identity);
+                newForceField.GetComponent<ForceFieldBehaviour>().AttachedToWall = false;
+                //GameManager.instance.CurrentOrb = newForceField.GetComponent<ForceFieldBehaviour>();
+                var localScale = newForceField.transform.localScale;
                 localScale *= OrbScale;
-                newOrb.transform.localScale = localScale;
-                newOrb.GetComponent<ForceFieldBehaviour>().Size = localScale * OrbScale;
+                newForceField.transform.localScale = localScale;
+                newForceField.GetComponent<ForceFieldBehaviour>().Size = localScale * OrbScale;
 
                 Vector2 directionToTarget = (hit.transform.position - FirePoint.transform.position).normalized; 
-                newOrb.GetComponent<Rigidbody>().AddForce(PlayerCamera.transform.forward * ShootForce, ForceMode.Impulse);
+                newForceField.GetComponent<Rigidbody>().AddForce(PlayerCamera.transform.forward * ShootForce, ForceMode.Impulse);
             }   
         }
     }

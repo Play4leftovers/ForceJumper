@@ -19,6 +19,8 @@ public class ForceFieldCollision : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        if (GetComponentInParent<ForceFieldBehaviour>().Type == ForceFieldBehaviour.ShieldType.Personal) return;
+        
         if (other.gameObject.CompareTag("Wall") || other.gameObject.CompareTag("Ground"))
         {
             Debug.Log("hit wall / ground!");
