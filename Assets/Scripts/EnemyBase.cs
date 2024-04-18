@@ -9,6 +9,8 @@ public class EnemyBase : MonoBehaviour
     [Header("Enemy Data")]
     public UnitClassData unitData;
 
+    public List<Node> currentPath = new List<Node>();
+
     [Header("Stats and Attributes")]
 
     [SerializeField] private int Level;
@@ -50,6 +52,7 @@ public class EnemyBase : MonoBehaviour
     public Transform player;
     public GameObject playerCharacter;
     public Collider EnemyCollider;
+    public Node PositionInGrid;
 
     private bool dead;
     private bool InRange = false;
@@ -62,10 +65,14 @@ public class EnemyBase : MonoBehaviour
 
     void Start()
     {
-        //InvokeRepeating("CheckLoS", refreshRate, refreshRate);
-
         SetupEnemyProperties();
         SetUpLevelScaling();
+
+        if (unitData.UnitMobilityType == UnitClassData.UnitType.Mobile)
+        {
+            Invoke("FindClosestGridTile", 1.0f);
+            InvokeRepeating("Patrol", 2.0f, 2.0f);
+        }
     }
 
     void SetupEnemyProperties()
@@ -102,7 +109,7 @@ public class EnemyBase : MonoBehaviour
     {
         if (unitData.UnitMobilityType == UnitClassData.UnitType.Mobile)
         {
-            Patrol();
+            //Patrol();
         }
 
         CheckLoS();
@@ -117,8 +124,6 @@ public class EnemyBase : MonoBehaviour
                 lockedOn = true;
 
                 Debug.Log("ROTATING TO TARGET");
-
-                // Start Shooting
             }
             else
             {
@@ -130,7 +135,67 @@ public class EnemyBase : MonoBehaviour
 
     private void Patrol()
     {
+        if (PositionInGrid != null && transform.position == PositionInGrid.transform.position)
+        {
+            GameObject StartNode = PositionInGrid.gameObject;
+            GameObject EndNode = Grid.Instance.allTiles[Random.Range(0, Grid.Instance.allTiles.Count)].gameObject;
 
+            if (EndNode.GetComponent<Node>().walkable)
+            {
+                currentPath = AStarPathfinding.FindPath(StartNode, EndNode, Grid.Instance.gridReference);
+                StartCoroutine(PatrolCoroutine());
+            }
+        }
+    }
+
+    public IEnumerator PatrolCoroutine()
+    {
+        if (PositionInGrid != null && currentPath.Count > 0)
+        {
+            foreach (Node node in currentPath)
+            {
+                if (node.walkable)
+                {
+                    Vector3 targetPosition = node.transform.position;
+                    while (transform.position != targetPosition)
+                    {
+                        transform.position = Vector3.MoveTowards(transform.position, targetPosition, 15f * Time.deltaTime);
+                        Debug.Log("BOB SAGET");
+                        yield return null;
+                    }
+
+                    PositionInGrid = node;
+                }
+            }
+        }
+    }
+
+    void FindClosestGridTile()
+    {
+        Transform closestTile = null;
+        float closestDistance = Mathf.Infinity;
+
+        foreach (Node tile in Grid.Instance.allTiles)
+        {
+            float distance = Vector3.Distance(transform.position, tile.gameObject.transform.position);
+
+            if (distance < closestDistance)
+            {
+                closestTile = tile.gameObject.transform;
+                closestDistance = distance;
+                PositionInGrid = tile;
+            }
+        }
+
+        if (closestTile != null)
+        {
+            transform.position = closestTile.position;
+            Debug.Log("Closest tile found at position: " + closestTile.position);
+        }
+        else
+        {
+            Debug.LogWarning("No grid tiles found.");
+        }
     }
 
     // Rolls a number between 0.1 - 1.0. If the rolled number is less or equal to the growth rate, the unit receives a point in that respective stat. Else, nothing happens.
