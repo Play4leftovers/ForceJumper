@@ -169,7 +169,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 687cd7ac3ce25cc4ba52df377bf9b906, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -203,9 +203,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c8cfa35b57d5217408a6056131fa18ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  worldPosition: {x: 0, y: 0, z: 0}
   walkable: 1
   occupied: 0
-  worldPosition: {x: 0, y: 0, z: 0}
   gridX: 0
   gridY: 0
   gCost: 0

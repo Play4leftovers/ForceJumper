@@ -40,7 +40,7 @@ public class Grid : MonoBehaviour
             unoccupiedTiles = allTiles;
         }
 
-        InvokeRepeating("SelectRandomTile", 1.0f, 1.0f);
+        //InvokeRepeating("SelectRandomTile", 1.0f, 1.0f);
     }
 
     void Start()
@@ -63,8 +63,6 @@ public class Grid : MonoBehaviour
     void Update()
     {
         if (grid == null) return;
-
-        //SelectTile();
 
         for (int i = 0; i < currentPath.Count; i++)
         {
@@ -224,7 +222,7 @@ public class Grid : MonoBehaviour
                 bool walkable = true;
                 foreach (Collider col in colliders)
                 {
-                    if (col.CompareTag("Obstacle"))
+                    if (col.CompareTag("Wall"))
                     {
                         walkable = false;
                     }
@@ -237,6 +235,7 @@ public class Grid : MonoBehaviour
                 if (!node.walkable)
                 {
                     tile.GetComponentInChildren<Renderer>().material.color = Color.blue;
+                    tile.GetComponentInChildren<MeshRenderer>().enabled = false;
                 }
 
                 node.gridX = x;
