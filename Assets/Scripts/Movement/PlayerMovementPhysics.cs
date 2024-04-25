@@ -64,6 +64,12 @@ public class PlayerMovementPhysics : MonoBehaviour
     [SerializeField] private float slopeSpeedChangeMultiplier = 7.5f;
     private bool _crouching;
 
+    [Header("Wallrunning")] 
+    [SerializeField] private float wallRunningSpeed = 1.5f;
+    [SerializeField] private float wallRunningDuration;
+    private bool _wallRunning;
+    
+    
     public MovementState state;
     private MovementState _previousState;
     private MovementState _lastFrameState;
@@ -75,7 +81,8 @@ public class PlayerMovementPhysics : MonoBehaviour
         Air,
         Dash,
         Crouching,
-        Sliding
+        Sliding,
+        Wallrunning
     }
     #endregion
     
@@ -148,6 +155,7 @@ public class PlayerMovementPhysics : MonoBehaviour
     private void Update()
     {
         GroundCheck();
+        WallCheck();
         OnSlope();
         SpeedControl();
         JumpHandle();
@@ -169,6 +177,11 @@ public class PlayerMovementPhysics : MonoBehaviour
         {
             state = MovementState.Dash;
             _desiredMoveSpeed = maxSpeed * dashingSpeed;
+        }
+        else if (_wallRunning)
+        {
+            state = MovementState.Wallrunning;
+            _desiredMoveSpeed = maxSpeed * wallRunningSpeed;
         }
         //State - Air
         else if (!_isGrounded)
@@ -239,6 +252,11 @@ public class PlayerMovementPhysics : MonoBehaviour
         {
             _rb.drag = airDrag;
         }
+    }
+
+    void WallCheck()
+    {
+        //Handle logic to see if you are supposed to be wallrunning
     }
     private Vector3 GetSlopeMoveDirection()
     {
