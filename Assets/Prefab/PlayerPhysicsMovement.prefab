@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1825806117435925196}
   - component: {fileID: 7623088706954759327}
   - component: {fileID: 7541327813957858539}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Cylinder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -92,7 +92,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3273675953235584132}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: FirePoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -123,7 +123,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3240823277477006062}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: GroundCheck
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -154,14 +154,16 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3424131184101892743}
+  - component: {fileID: 448163742894909693}
+  - component: {fileID: -7461450473525911114}
   - component: {fileID: 6155039863854221801}
   - component: {fileID: 8205581557579750301}
   - component: {fileID: 4869109604208848251}
   - component: {fileID: 3739227438798264813}
   - component: {fileID: 2659376081702226085}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: PlayerPhysicsMovement
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -185,6 +187,56 @@ Transform:
   - {fileID: 3240823277477006062}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!33 &448163742894909693
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8155408345395792475}
+  m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!23 &-7461450473525911114
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8155408345395792475}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 687cd7ac3ce25cc4ba52df377bf9b906, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
 --- !u!114 &6155039863854221801
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -197,8 +249,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab5328f086ed1654ab71f8602c56850f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxSpeed: 8
-  accelerationSpeed: 15
+  maxSpeed: 10
+  accelerationForce: 13
+  speedChangeMultiplier: 1
   groundDrag: 5
   airDrag: 0
   airSpeedMultiplier: 0.4
@@ -207,15 +260,17 @@ MonoBehaviour:
   jumpCooldown: 0.3
   groundMask:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 8
   groundDistance: 0.4
+  onSlope: 0
   maxSlopeAngle: 45
   dashingDuration: 0.2
-  dashingSpeed: 4
-  dashingAcceleration: 15
-  crouchSpeed: 0.5
-  crouchAcceleration: 0.75
+  dashingSpeed: 20
+  dashingSpeedChangeMultiplier: 70
+  crouchSpeed: 0.4
+  slopeSlideSpeed: 3
   crouchYScale: 0.5
+  slopeSpeedChangeMultiplier: 2.5
   state: 0
 --- !u!114 &8205581557579750301
 MonoBehaviour:
@@ -338,6 +393,10 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 15609ff8-448b-43e0-bd39-430e46c0d050
     m_ActionName: Player/Crouch[/Keyboard/leftCtrl]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 9dac35e5-b8e6-442f-9ccb-78258ecb5dd5
+    m_ActionName: Player/PersonalForceShield[/Keyboard/q]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
@@ -424,7 +483,7 @@ GameObject:
   - component: {fileID: 5057621881944050072}
   - component: {fileID: 137193538570928907}
   - component: {fileID: 5381925599852799761}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
