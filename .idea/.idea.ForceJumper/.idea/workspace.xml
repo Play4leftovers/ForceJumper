@@ -4,8 +4,6 @@
     <list default="true" id="3b41de63-934e-41fb-a411-0021e09efdca" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.ForceJumper/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ForceJumper/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/Movement/PlayerMovementPhysics.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Movement/PlayerMovementPhysics.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ProjectSettings/Packages/com.unity.testtools.codecoverage/Settings.json" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/Packages/com.unity.testtools.codecoverage/Settings.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ProjectSettings/ShaderGraphSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/ShaderGraphSettings.asset" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -96,7 +94,7 @@
       <workItem from="1712797272977" duration="35000" />
       <workItem from="1713083179440" duration="3860000" />
       <workItem from="1713173302743" duration="14931000" />
-      <workItem from="1714142615442" duration="6700000" />
+      <workItem from="1714142615442" duration="7840000" />
     </task>
     <servers />
   </component>

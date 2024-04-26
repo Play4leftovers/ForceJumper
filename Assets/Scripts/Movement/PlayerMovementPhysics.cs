@@ -258,6 +258,12 @@ public class PlayerMovementPhysics : MonoBehaviour
         }
     }
 
+    //Todo: add more conditions 
+    //Acceleration and deceleration while wallrunning
+    //Moving up (or possibly down) at a steady pace while wallrunning
+    //Check so that it actually has a max angle you can look while wallrunning
+    //When you let go of "jump" while wallrunning, it jumps a bit away from the wall and upwards
+
     void WallrunningCheck()
     {
         _wallToRight = Physics.Raycast(transform.position, transform.right, 1, wallMask);
