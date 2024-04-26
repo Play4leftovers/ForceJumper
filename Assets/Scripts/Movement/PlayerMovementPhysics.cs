@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
@@ -40,7 +41,6 @@ public class PlayerMovementPhysics : MonoBehaviour
     [Header("Ground Check")] 
     private float _playerHeight;
     public LayerMask groundMask;
-    public float groundDistance = 0.4f;
     private bool _isGrounded;
 
     [Header("Slope Control")] 
@@ -67,8 +67,11 @@ public class PlayerMovementPhysics : MonoBehaviour
     [Header("Wallrunning")] 
     [SerializeField] private float wallRunningSpeed = 1.5f;
     [SerializeField] private float wallRunningDuration;
-    private bool _wallRunning;
-    
+    [SerializeField] private float wallRunningAngleLimit = 45f;
+    public LayerMask wallMask; 
+    public bool _wallRunning;
+    private bool _wallToRight;
+    private bool _wallToLeft;
     
     public MovementState state;
     private MovementState _previousState;
@@ -155,7 +158,7 @@ public class PlayerMovementPhysics : MonoBehaviour
     private void Update()
     {
         GroundCheck();
-        WallCheck();
+        WallrunningCheck();
         OnSlope();
         SpeedControl();
         JumpHandle();
@@ -178,6 +181,7 @@ public class PlayerMovementPhysics : MonoBehaviour
             state = MovementState.Dash;
             _desiredMoveSpeed = maxSpeed * dashingSpeed;
         }
+        //State - Wallrunning
         else if (_wallRunning)
         {
             state = MovementState.Wallrunning;
@@ -239,7 +243,7 @@ public class PlayerMovementPhysics : MonoBehaviour
     }
     #endregion
     
-    #region Ground and Slope Check
+    #region Ground, Wall, and Slope Check
     void GroundCheck()
     {
         _isGrounded = Physics.Raycast(transform.position, Vector3.down, _playerHeight*0.5f+0.3f, groundMask);
@@ -254,9 +258,24 @@ public class PlayerMovementPhysics : MonoBehaviour
         }
     }
 
-    void WallCheck()
+    void WallrunningCheck()
     {
-        //Handle logic to see if you are supposed to be wallrunning
+        _wallToRight = Physics.Raycast(transform.position, transform.right, 1, wallMask);
+        _wallToLeft = Physics.Raycast(transform.position, -transform.right, 1, wallMask);
+
+        if (_jumping && (_wallToLeft || _wallToRight))
+        {
+            _wallRunning = true;
+            _rb.useGravity = false;
+            var velocity = _rb.velocity;
+            velocity = new Vector3(velocity.x, 0, velocity.z);
+            _rb.velocity = velocity;
+        }
+        else
+        {
+            _wallRunning = false;
+            _rb.useGravity = true;
+        }
     }
     private Vector3 GetSlopeMoveDirection()
     {
@@ -291,6 +310,14 @@ public class PlayerMovementPhysics : MonoBehaviour
             {
                 _rb.AddForce(Vector3.down * (accelerationForce * 8f), ForceMode.Force);
             } 
+        }
+        
+        else if (_wallRunning)
+        {
+            _rb.AddForce(transform1.forward * (_floatingMaxSpeed * accelerationForce), ForceMode.Force);
+
+            int directionalMultiplier = _wallToRight ? 1 : -1;
+            _rb.AddForce(transform1.right * (directionalMultiplier * (_floatingMaxSpeed * accelerationForce)/5));
         }
         
         else switch (_isGrounded || _dashing)
@@ -368,7 +395,7 @@ public class PlayerMovementPhysics : MonoBehaviour
     #region Jumping and Dashing
     void JumpHandle()
     {
-        if (_isGrounded && _readyToJump && _jumping)
+        if (_isGrounded && _readyToJump && _jumping && !_wallRunning)
         {
             _readyToJump = false;
             Jumping();
