@@ -47,7 +47,7 @@ public class PersonalForceShield : MonoBehaviour
         forceFieldScript.Owner = gameObject;
         
         forceFieldRigidbody.useGravity = false;
-        forceFieldRigidbody.isKinematic = false;
+        forceFieldRigidbody.isKinematic = true;
 
         //GameManager.instance.CurrentOrb = newForceField.GetComponent<ForceFieldBehaviour>();
         var localScale = newForceField.transform.localScale;

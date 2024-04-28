@@ -1704,6 +1704,27 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &738014167 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8155408345395792475, guid: a61acf84942a40f4ea2b80a698bc2418, type: 3}
+  m_PrefabInstance: {fileID: 1996110275}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &738014174
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 738014167}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86dc80ca3cad87c4cb69dca681d0c3bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ForceFieldPrefab: {fileID: 187177218195128111, guid: 9002a16f15e6ee446bab3350790bd25a, type: 3}
+  OrbScale: 6
+  Duration: 3
+  Active: 0
 --- !u!1 &740116663
 GameObject:
   m_ObjectHideFlags: 0
@@ -4039,10 +4060,41 @@ PrefabInstance:
       propertyPath: m_Name
       value: PlayerPhysicsMovement
       objectReference: {fileID: 0}
+    - target: {fileID: 8205581557579750301, guid: a61acf84942a40f4ea2b80a698bc2418, type: 3}
+      propertyPath: m_ActionEvents.Array.data[6].m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8205581557579750301, guid: a61acf84942a40f4ea2b80a698bc2418, type: 3}
+      propertyPath: m_ActionEvents.Array.data[6].m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8205581557579750301, guid: a61acf84942a40f4ea2b80a698bc2418, type: 3}
+      propertyPath: m_ActionEvents.Array.data[6].m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 738014174}
+    - target: {fileID: 8205581557579750301, guid: a61acf84942a40f4ea2b80a698bc2418, type: 3}
+      propertyPath: m_ActionEvents.Array.data[6].m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8205581557579750301, guid: a61acf84942a40f4ea2b80a698bc2418, type: 3}
+      propertyPath: m_ActionEvents.Array.data[6].m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ActivatePersonalForceShield
+      objectReference: {fileID: 0}
+    - target: {fileID: 8205581557579750301, guid: a61acf84942a40f4ea2b80a698bc2418, type: 3}
+      propertyPath: m_ActionEvents.Array.data[6].m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: PersonalForceShield, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 8205581557579750301, guid: a61acf84942a40f4ea2b80a698bc2418, type: 3}
+      propertyPath: m_ActionEvents.Array.data[6].m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 8155408345395792475, guid: a61acf84942a40f4ea2b80a698bc2418, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 738014174}
   m_SourcePrefab: {fileID: 100100000, guid: a61acf84942a40f4ea2b80a698bc2418, type: 3}
 --- !u!1 &2138152761
 GameObject:
