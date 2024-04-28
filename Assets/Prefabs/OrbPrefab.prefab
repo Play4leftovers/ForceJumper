@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 5861173864077604162}
   - component: {fileID: 3560484859454161921}
   - component: {fileID: 82868332938448979}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: OrbPrefab
   m_TagString: ForceField
   m_Icon: {fileID: 0}
@@ -120,9 +120,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f8a7c63a7ba6c245ac9178d360b1ab0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Type: 0
+  Owner: {fileID: 0}
   HitMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 8
   localPos: {x: 0, y: 0, z: 0}
   ImpactPoint: {x: 0, y: 0, z: 0}
   Health: 3
@@ -136,7 +138,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 187177218195128111}
   serializedVersion: 4
-  m_Mass: 1
+  m_Mass: 0.0000001
   m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
