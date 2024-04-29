@@ -57,8 +57,33 @@ public class GrenadeThrowing : MonoBehaviour
         GameObject newForceField = Instantiate(OrbPrefab, CurrentGrenade.transform.position, Quaternion.identity);
         
         ForceFieldBehaviour forceFieldScript = newForceField.GetComponent<ForceFieldBehaviour>();
+        
+        RaycastHit hit;
+        if (Physics.Raycast(CurrentGrenade.transform.position, CurrentGrenade.transform.forward, out hit, OrbScale/2))
+        {
+            // Check if the surface is close to vertical (considered as a wall)
+            if (Vector3.Dot(hit.normal, Vector3.up) < 0.1f)
+            {
+                Rigidbody forceFieldRigidbody = newForceField.GetComponent<Rigidbody>();
 
-        forceFieldScript.AttachedToWall = false;
+                forceFieldRigidbody.isKinematic = true;
+                forceFieldRigidbody.useGravity = false;
+                
+                // Calculate the vector from the object to the wall
+                Vector3 pushDirection = hit.point - CurrentGrenade.transform.position;
+
+                // Normalize the direction vector
+                pushDirection.Normalize();
+
+                // Apply a force to push the object towards the wall
+                
+                if (forceFieldRigidbody != null)
+                {
+                    forceFieldRigidbody.AddForce(pushDirection * 20f, ForceMode.Impulse);
+                }
+            }
+        }
+        
         forceFieldScript.Type = ForceFieldBehaviour.ShieldType.Free;
         forceFieldScript.Owner = gameObject;
 
