@@ -412,7 +412,7 @@ public class PlayerMovementPhysics : MonoBehaviour
     void Jumping()
     {
         _exitingSlope = true;
-        _rb.velocity = new Vector3(_rb.velocity.x, 0f, _rb.velocity.z);
+        //_rb.velocity = new Vector3(_rb.velocity.x, 0f, _rb.velocity.z); //Disabled so that velocity is not reset while jumping to maintain velocity.
         _rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
     }
 

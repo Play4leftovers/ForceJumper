@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class JumpPad : MonoBehaviour
 {
-    public float Force = 25f;
+    public float force = 25f;
     
     // Start is called before the first frame update
     void Start()
@@ -21,6 +21,8 @@ public class JumpPad : MonoBehaviour
 
     private void OnCollisionEnter(Collision other)
     {
-        other.transform.GetComponent<Rigidbody>().AddForce(Vector3.up * Force, ForceMode.Impulse);
+        //other.transform.GetComponent<Rigidbody>().AddForce(Vector3.up * Force, ForceMode.Impulse);
+        var temp = other.transform.GetComponent<Rigidbody>().velocity;
+        other.transform.GetComponent<Rigidbody>().velocity = new Vector3(temp.x, force, temp.z);
     }
 }
