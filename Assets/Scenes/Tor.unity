@@ -450,7 +450,7 @@ GameObject:
   - component: {fileID: 1197272937}
   - component: {fileID: 1197272936}
   - component: {fileID: 1197272935}
-  m_Layer: 3
+  m_Layer: 6
   m_Name: Cube (6)
   m_TagString: Ground
   m_Icon: {fileID: 0}
@@ -717,8 +717,16 @@ PrefabInstance:
       value: 0.4
       objectReference: {fileID: 0}
     - target: {fileID: 6155039863854221801, guid: a61acf84942a40f4ea2b80a698bc2418, type: 3}
+      propertyPath: _wallRunning
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6155039863854221801, guid: a61acf84942a40f4ea2b80a698bc2418, type: 3}
       propertyPath: dashingSpeed
       value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 6155039863854221801, guid: a61acf84942a40f4ea2b80a698bc2418, type: 3}
+      propertyPath: wallMask.m_Bits
+      value: 64
       objectReference: {fileID: 0}
     - target: {fileID: 6155039863854221801, guid: a61acf84942a40f4ea2b80a698bc2418, type: 3}
       propertyPath: accelerationForce
@@ -727,6 +735,10 @@ PrefabInstance:
     - target: {fileID: 6155039863854221801, guid: a61acf84942a40f4ea2b80a698bc2418, type: 3}
       propertyPath: groundMask.m_Bits
       value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 6155039863854221801, guid: a61acf84942a40f4ea2b80a698bc2418, type: 3}
+      propertyPath: wallrunExitDuration
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6155039863854221801, guid: a61acf84942a40f4ea2b80a698bc2418, type: 3}
       propertyPath: speedChangeMultiplier

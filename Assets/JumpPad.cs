@@ -21,8 +21,6 @@ public class JumpPad : MonoBehaviour
 
     private void OnCollisionEnter(Collision other)
     {
-        //other.transform.GetComponent<Rigidbody>().AddForce(Vector3.up * Force, ForceMode.Impulse);
-        var temp = other.transform.GetComponent<Rigidbody>().velocity;
-        other.transform.GetComponent<Rigidbody>().velocity = new Vector3(temp.x, force, temp.z);
+        other.transform.GetComponent<Rigidbody>().AddForce(transform.up * force, ForceMode.Impulse);
     }
 }

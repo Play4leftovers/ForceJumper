@@ -13,6 +13,7 @@ public class PlayerMovementPhysics : MonoBehaviour
     private Vector2 _inputDir;
     private Vector3 _moveDir;
     private CapsuleCollider _capsuleCollider;
+    [SerializeField] private Camera camera;
 
     private bool _inputStopper = false;
     
@@ -68,11 +69,14 @@ public class PlayerMovementPhysics : MonoBehaviour
     [SerializeField] private float wallRunningSpeed = 1.5f;
     [SerializeField] private float wallRunningDuration;
     [SerializeField] private float wallRunningAngleLimit = 45f;
+    [SerializeField] private float wallrunExitDuration = 0.2f;
     public LayerMask wallMask; 
-    public bool _wallRunning;
+    private bool _wallRunning;
+    public bool _exitingWallrun;
     private bool _wallToRight;
     private bool _wallToLeft;
     
+    [Header("States")] 
     public MovementState state;
     private MovementState _previousState;
     private MovementState _lastFrameState;
@@ -185,6 +189,7 @@ public class PlayerMovementPhysics : MonoBehaviour
         else if (_wallRunning)
         {
             state = MovementState.Wallrunning;
+            doubleJump = false;
             _desiredMoveSpeed = maxSpeed * wallRunningSpeed;
         }
         //State - Air
@@ -223,7 +228,6 @@ public class PlayerMovementPhysics : MonoBehaviour
             state = MovementState.Standing;
             _desiredMoveSpeed = maxSpeed;
         }
-        
 
         if (Mathf.Abs(_desiredMoveSpeed - _lastDesiredMoveSpeed) > SpeedChangeThreshold)
         {
@@ -259,7 +263,6 @@ public class PlayerMovementPhysics : MonoBehaviour
     }
 
     //Todo: add more conditions 
-    //Acceleration and deceleration while wallrunning
     //Moving up (or possibly down) at a steady pace while wallrunning
     //Check so that it actually has a max angle you can look while wallrunning
     //When you let go of "jump" while wallrunning, it jumps a bit away from the wall and upwards
@@ -269,20 +272,31 @@ public class PlayerMovementPhysics : MonoBehaviour
         _wallToRight = Physics.Raycast(transform.position, transform.right, 1, wallMask);
         _wallToLeft = Physics.Raycast(transform.position, -transform.right, 1, wallMask);
 
-        if (_jumping && (_wallToLeft || _wallToRight))
+        if (_jumping && (_wallToLeft || _wallToRight) && !_exitingWallrun)
         {
             _wallRunning = true;
             _rb.useGravity = false;
             var velocity = _rb.velocity;
-            velocity = new Vector3(velocity.x, 0, velocity.z);
+            velocity = new Vector3(velocity.x, -2, velocity.z);
             _rb.velocity = velocity;
         }
         else
         {
+            if (_wallRunning)
+            {
+                ExitingWallrun();
+                Invoke(nameof(ExitingWallrun), wallrunExitDuration);
+            }
             _wallRunning = false;
             _rb.useGravity = true;
         }
     }
+
+    void ExitingWallrun()
+    {
+        _exitingWallrun = !_exitingWallrun;
+    }
+    
     private Vector3 GetSlopeMoveDirection()
     {
         return Vector3.ProjectOnPlane(_moveDir, _slopeHit.normal).normalized;
@@ -412,13 +426,23 @@ public class PlayerMovementPhysics : MonoBehaviour
     void Jumping()
     {
         _exitingSlope = true;
-        //_rb.velocity = new Vector3(_rb.velocity.x, 0f, _rb.velocity.z); //Disabled so that velocity is not reset while jumping to maintain velocity.
+        var velocity = _rb.velocity;
+        if (velocity.y < 0)
+        {
+            velocity = new Vector3(velocity.x, 0, velocity.z);
+            _rb.velocity = velocity;
+        }
         _rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
     }
 
     void DoubleJump()
     {
-        _rb.velocity = new Vector3(_rb.velocity.x, 0f, _rb.velocity.z);
+        var velocity = _rb.velocity;
+        if (velocity.y < 0)
+        {
+            velocity = new Vector3(velocity.x, 0, velocity.z);
+            _rb.velocity = velocity;
+        }
         _rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
         doubleJump = true;
     }
