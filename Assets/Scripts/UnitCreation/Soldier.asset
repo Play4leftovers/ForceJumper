@@ -15,6 +15,7 @@ MonoBehaviour:
   className: Soldier
   classDescription: Soldier.
   promotedClass: 0
+  PermanentlyChasePlayer: 1
   defaultMovementRange: 5
   defaultHealth: 5
   defaultPower: 5
@@ -26,8 +27,9 @@ MonoBehaviour:
   healthGrowth: 0.483
   powerGrowth: 0.326
   intelligenceGrowth: 0.215
-  speedGrowth: 0.384
+  speedGrowth: 1
   aimGrowth: 0.174
   reflexesGrowth: 0.285
   attackSpeedGrowth: 0.227
   UnitMobilityType: 1
+  CurrentUnitState: 0
