@@ -8,6 +8,8 @@ public class UnitClassData : ScriptableObject
 
     public bool promotedClass;
 
+    public bool PermanentlyChasePlayer;
+
     [Header("Base Stats")]
 
     public int defaultMovementRange;
@@ -29,11 +31,20 @@ public class UnitClassData : ScriptableObject
     [Range(0, 1)] public float reflexesGrowth;
     [Range(0, 1)] public float attackSpeedGrowth;
 
-    public enum UnitType
-    {
-        Static,
-        Mobile
-    }
+    //public enum UnitType
+    //{
+    //    Static,
+    //    Mobile
+    //}
 
-    public UnitType UnitMobilityType;
+    //public enum UnitState
+    //{
+    //    Waiting,
+    //    Patrolling,
+    //    Chasing,
+    //}
+
+    //public UnitType UnitMobilityType;
+
+    //public UnitState CurrentUnitState;
 }

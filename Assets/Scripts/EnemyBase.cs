@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.VisualScripting;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -30,6 +32,7 @@ public class EnemyBase : MonoBehaviour
     [Range(0, 360)]
     public float viewAngle;
     public float baseViewAngle;
+    public Vector3 OffsetToGround = new Vector3(0, 2, 0);
 
     public float lockOnThreshold = 2f;
 
@@ -46,6 +49,7 @@ public class EnemyBase : MonoBehaviour
 
     public float rotationSpeed = 5f;
     private bool rotating = false;
+    private bool coroutineStarted = false;
 
     [Header("Logistics")]
 
@@ -54,6 +58,7 @@ public class EnemyBase : MonoBehaviour
     public Collider EnemyCollider;
     public Node PositionInGrid;
 
+    private bool TrackPlayer;
     private bool dead;
     private bool InRange = false;
     private bool InLineOfSight;
@@ -63,15 +68,81 @@ public class EnemyBase : MonoBehaviour
 
     private bool isAttacking = false;
 
+    public enum UnitType
+    {
+        Static,
+        Mobile
+    }
+
+    public enum UnitState
+    {
+        Waiting,
+        Patrolling,
+        Chasing,
+    }
+
+    public UnitType UnitMobilityType;
+
+    public UnitState CurrentUnitState;
+
+
     void Start()
     {
         SetupEnemyProperties();
         SetUpLevelScaling();
 
-        if (unitData.UnitMobilityType == UnitClassData.UnitType.Mobile)
+        if (UnitMobilityType == UnitType.Mobile)
         {
             Invoke("FindClosestGridTile", 1.0f);
-            InvokeRepeating("Patrol", 2.0f, 2.0f);
+        }
+    }
+    void Update()
+    {
+        switch (CurrentUnitState)
+        {
+            case UnitState.Waiting:
+                coroutineStarted = false;
+                CurrentUnitState = UnitState.Patrolling;
+                Patrol();
+                break;
+            case UnitState.Patrolling:
+                coroutineStarted = false;
+                Patrol();
+                CheckLoS();
+                RotateTowardsTarget();
+                break;
+            case UnitState.Chasing:
+                if (player != null && !coroutineStarted)
+                {
+                    StopCoroutine(PatrolCoroutine());
+                    StartCoroutine(ChasePlayer());
+                    coroutineStarted = true;
+                }
+                CheckLoS();
+                RotateTowardsTarget();
+                break;
+        }
+
+        if (InLineOfSight && CurrentUnitState != UnitState.Chasing)
+        {
+            FindClosestGridTile();
+            CurrentUnitState = UnitState.Chasing;
+        }
+    }
+
+    void RotateTowardsTarget()
+    {
+        transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+
+        if (Quaternion.Angle(transform.rotation, targetRotation) < lockOnThreshold)
+        {
+            rotating = false;
+            lockedOn = true;
+        }
+        else
+        {
+            rotating = true;
+            lockedOn = false;
         }
     }
 
@@ -88,7 +159,6 @@ public class EnemyBase : MonoBehaviour
         rotationSpeed = Reflexes;
         coneRadius = Intelligence * 10;
         viewAngle = baseViewAngle + (Intelligence * 4);
-
     }
 
     void SetUpLevelScaling()
@@ -105,45 +175,22 @@ public class EnemyBase : MonoBehaviour
         }
     }
 
-    void Update()
-    {
-        if (unitData.UnitMobilityType == UnitClassData.UnitType.Mobile)
-        {
-            //Patrol();
-        }
-
-        CheckLoS();
-
-        if (InLineOfSight)
-        {
-            transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
-
-            if (Quaternion.Angle(transform.rotation, targetRotation) < lockOnThreshold)
-            {
-                rotating = false;
-                lockedOn = true;
-
-                Debug.Log("ROTATING TO TARGET");
-            }
-            else
-            {
-                rotating = true;
-                lockedOn = false;
-            }
-        }
-    }
-
     private void Patrol()
     {
-        if (PositionInGrid != null && transform.position == PositionInGrid.transform.position)
+        if (PositionInGrid != null)
         {
-            GameObject StartNode = PositionInGrid.gameObject;
-            GameObject EndNode = Grid.Instance.allTiles[Random.Range(0, Grid.Instance.allTiles.Count)].gameObject;
+            GameObject startNode = PositionInGrid.gameObject;
 
-            if (EndNode.GetComponent<Node>().walkable)
+            // Check if currentPath is empty or if the enemy is close enough to the last node
+            if (currentPath.Count == 0 || Vector3.Distance(transform.position, currentPath[currentPath.Count - 1].transform.position + OffsetToGround) <= 0f)
             {
-                currentPath = AStarPathfinding.FindPath(StartNode, EndNode, Grid.Instance.gridReference);
-                StartCoroutine(PatrolCoroutine());
+                GameObject endNode = Grid.Instance.allTiles[Random.Range(0, Grid.Instance.allTiles.Count)].gameObject;
+
+                if (endNode.GetComponent<Node>().walkable)
+                {
+                    currentPath = AStarPathfinding.FindPath(startNode, endNode, Grid.Instance.gridReference);
+                    StartCoroutine(PatrolCoroutine());
+                }
             }
         }
     }
@@ -156,19 +203,69 @@ public class EnemyBase : MonoBehaviour
             {
                 if (node.walkable)
                 {
-                    Vector3 targetPosition = node.transform.position;
-                    while (transform.position != targetPosition)
+                    Vector3 targetPosition = node.transform.position + OffsetToGround;
+                    while (Vector3.Distance(transform.position, targetPosition) > 0.1f)
                     {
-                        transform.position = Vector3.MoveTowards(transform.position, targetPosition, 15f * Time.deltaTime);
-                        Debug.Log("BOB SAGET");
+                        transform.position = Vector3.MoveTowards(transform.position, targetPosition, unitData.defaultSpeed * Time.deltaTime);
                         yield return null;
                     }
+
+                    // Ensure that the position is exactly at the target position
+                    transform.position = targetPosition;
 
                     PositionInGrid = node;
                 }
             }
         }
     }
+
+    public IEnumerator ChasePlayer()
+    {
+        while (CurrentUnitState == UnitState.Chasing)
+        {
+            //FindClosestGridTile();
+            GetPlayerTile();
+
+            List<Node> nodes = new List<Node>(currentPath);
+            Vector3 previousEndPosition = Vector3.zero;
+
+            foreach (Node node in currentPath)
+            {
+                if (!node.walkable)
+                    continue;
+
+                Vector3 targetPosition = node.transform.position + OffsetToGround;
+
+                // Move towards the target position
+                yield return StartCoroutine(MoveTowardsPosition(targetPosition));
+
+                PositionInGrid = node;
+            }
+
+            yield return new WaitForSeconds(refreshRate);
+        }
+    }
+
+    private IEnumerator MoveTowardsPosition(Vector3 targetPosition)
+    {
+        while (transform.position != targetPosition)
+        {
+
+            transform.position = Vector3.MoveTowards(transform.position, targetPosition, unitData.defaultSpeed * Time.deltaTime);
+
+            if (transform.position == targetPosition && currentPath.Count > 0 && targetPosition != currentPath.Last().transform.position + OffsetToGround)
+            {
+                Debug.Log("End position has changed while moving. Breaking loop.");
+                break;
+            }
+
+            yield return null;
+        }
+
+        FindClosestGridTile();
+        GetPlayerTile();
+    }
+
 
     void FindClosestGridTile()
     {
@@ -189,12 +286,33 @@ public class EnemyBase : MonoBehaviour
 
         if (closestTile != null)
         {
-            transform.position = closestTile.position;
-            Debug.Log("Closest tile found at position: " + closestTile.position);
+            transform.position = closestTile.position + OffsetToGround;
+            
         }
-        else
+    }
+
+    void GetPlayerTile()
+    {
+        Transform closestTile = null;
+        float closestDistance = Mathf.Infinity;
+
+        foreach (Node tile in Grid.Instance.allTiles)
         {
-            Debug.LogWarning("No grid tiles found.");
+            float distance = Vector3.Distance(player.transform.position, tile.gameObject.transform.position);
+
+            if (distance < closestDistance)
+            {
+                closestTile = tile.gameObject.transform;
+                closestDistance = distance;
+            }
+        }
+
+        if (closestTile != null)
+        {
+            GameObject StartNode = PositionInGrid.gameObject;
+            GameObject EndNode = closestTile.gameObject;
+
+            currentPath = AStarPathfinding.FindPath(StartNode, EndNode, Grid.Instance.gridReference);
         }
     }
 
@@ -215,7 +333,6 @@ public class EnemyBase : MonoBehaviour
     {
         while (lockedOn)
         {
-            // pew pew
             yield return new WaitForSeconds(AttackSpeed);
         }
     }
@@ -241,6 +358,12 @@ public class EnemyBase : MonoBehaviour
         if (other.gameObject.CompareTag("Player"))
         {
             StartCheckingLoS = false;
+
+            if (!unitData.PermanentlyChasePlayer)
+            {
+                CurrentUnitState = UnitState.Patrolling;
+            }
+
             lockedOn = false;
         }
     }
@@ -249,32 +372,35 @@ public class EnemyBase : MonoBehaviour
     {
         if (StartCheckingLoS)
         {
-            Collider[] cone = Physics.OverlapSphere(transform.position, coneRadius);
+            Collider[] cone = Physics.OverlapSphere(transform.position, coneRadius, hitMask);
 
             if (cone.Length != 0 && !CanMove)
             {
                 foreach (var hitCollider in cone)
                 {
                     var target = hitCollider.GetComponent<PlayerMovement>();
-                    Transform targetTransform = hitCollider.GetComponent<Transform>();
-                    Vector3 targetDirection = (targetTransform.position - transform.position).normalized;
-                    if (Vector3.Angle(transform.forward, targetDirection) < viewAngle / 2 && target || Vector3.Angle(transform.forward, targetDirection) < viewAngle / 2 && target)
-                    {
+                    if (target == null) continue;
 
+                    Transform targetTransform = hitCollider.transform;
+                    Vector3 targetDirection = (targetTransform.position - transform.position + OffsetToGround).normalized;
+                    float angleToTarget = Vector3.Angle(transform.forward, targetDirection);
+
+                    if (angleToTarget < viewAngle / 2 || CurrentUnitState == UnitState.Chasing)
+                    {
                         float distanceToTarget = Vector3.Distance(transform.position, targetTransform.position);
 
-                        if (!Physics.Raycast(transform.position, targetDirection, distanceToTarget, blockedMask))
+                        RaycastHit hit;
+                        if (!Physics.Raycast(transform.position, targetDirection, out hit, distanceToTarget, blockedMask) || CurrentUnitState == UnitState.Chasing)
                         {
                             InLineOfSight = true;
                             targetRotation = Quaternion.LookRotation(targetDirection);
+                            player = target.transform;
+                            return;
                         }
-                        else
-                        {
-                            InLineOfSight = false;
-                        }
-
                     }
                 }
+
+                InLineOfSight = false;
             }
         }
     }
