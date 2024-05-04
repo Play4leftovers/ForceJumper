@@ -69,12 +69,16 @@ public class PlayerMovementPhysics : MonoBehaviour
     [SerializeField] private float wallRunningSpeed = 1.5f;
     [SerializeField] private float wallRunningDuration;
     [SerializeField] private float wallRunningAngleLimit = 45f;
-    [SerializeField] private float wallrunExitDuration = 0.2f;
-    public LayerMask wallMask; 
+    [SerializeField] private float wallrunningExitDuration = 0.2f;
+    [SerializeField] private float wallrunningDownSpeed = 0.5f;
+    public LayerMask wallMask;
+    private RaycastHit _outLeft;
+    private RaycastHit _outRight;
     private bool _wallRunning;
-    public bool _exitingWallrun;
+    private bool _exitingWallrun;
     private bool _wallToRight;
     private bool _wallToLeft;
+    private Vector3 _wallrunningWallParallelDirection;
     
     [Header("States")] 
     public MovementState state;
@@ -269,23 +273,32 @@ public class PlayerMovementPhysics : MonoBehaviour
 
     void WallrunningCheck()
     {
-        _wallToRight = Physics.Raycast(transform.position, transform.right, 1, wallMask);
-        _wallToLeft = Physics.Raycast(transform.position, -transform.right, 1, wallMask);
+        _wallToRight = Physics.Raycast(transform.position, transform.right, out _outRight, 1, wallMask);
+        _wallToLeft = Physics.Raycast(transform.position, -transform.right, out _outLeft, 1, wallMask);
 
         if (_jumping && (_wallToLeft || _wallToRight) && !_exitingWallrun)
         {
             _wallRunning = true;
             _rb.useGravity = false;
             var velocity = _rb.velocity;
-            velocity = new Vector3(velocity.x, -2, velocity.z);
+            velocity = new Vector3(velocity.x, wallrunningDownSpeed, velocity.z);
             _rb.velocity = velocity;
+
+            if (_wallToRight)
+            {
+                _wallrunningWallParallelDirection = Quaternion.AngleAxis(90, Vector3.up) * _outRight.normal;
+            }
+            else
+            {
+                _wallrunningWallParallelDirection = Quaternion.AngleAxis(-90, Vector3.up) * _outLeft.normal;
+            }
         }
         else
         {
             if (_wallRunning)
             {
                 ExitingWallrun();
-                Invoke(nameof(ExitingWallrun), wallrunExitDuration);
+                Invoke(nameof(ExitingWallrun), wallrunningExitDuration);
             }
             _wallRunning = false;
             _rb.useGravity = true;
@@ -334,10 +347,7 @@ public class PlayerMovementPhysics : MonoBehaviour
         
         else if (_wallRunning)
         {
-            _rb.AddForce(transform1.forward * (_floatingMaxSpeed * accelerationForce), ForceMode.Force);
-
-            int directionalMultiplier = _wallToRight ? 1 : -1;
-            _rb.AddForce(transform1.right * (directionalMultiplier * (_floatingMaxSpeed * accelerationForce)/5));
+            _rb.AddForce(_wallrunningWallParallelDirection * (_floatingMaxSpeed * accelerationForce), ForceMode.Force);
         }
         
         else switch (_isGrounded || _dashing)

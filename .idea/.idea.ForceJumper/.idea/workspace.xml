@@ -6,10 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="3b41de63-934e-41fb-a411-0021e09efdca" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.ForceJumper/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ForceJumper/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scenes/CarolinaTestScene.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/CarolinaTestScene.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Player/GrenadeThrowing.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Player/GrenadeThrowing.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ProjectSettings/DynamicsManager.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/DynamicsManager.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ProjectSettings/TagManager.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/TagManager.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Prefab/PlayerPhysicsMovement.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefab/PlayerPhysicsMovement.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Movement/PlayerMovementPhysics.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Movement/PlayerMovementPhysics.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
