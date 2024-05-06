@@ -64,7 +64,7 @@ public class EnemyBase : MonoBehaviour
     private bool InLineOfSight;
     private bool CanMove = false;
 
-    private float refreshRate = 0.5f;
+    public float refreshRate = 0.05f;
 
     private bool isAttacking = false;
 
@@ -197,7 +197,7 @@ public class EnemyBase : MonoBehaviour
 
     public IEnumerator PatrolCoroutine()
     {
-        if (PositionInGrid != null && currentPath.Count > 0)
+        if (PositionInGrid != null && currentPath.Count > 0 && CurrentUnitState == UnitState.Patrolling)
         {
             foreach (Node node in currentPath)
             {
@@ -207,6 +207,11 @@ public class EnemyBase : MonoBehaviour
                     while (Vector3.Distance(transform.position, targetPosition) > 0.1f)
                     {
                         transform.position = Vector3.MoveTowards(transform.position, targetPosition, unitData.defaultSpeed * Time.deltaTime);
+                        if (InLineOfSight)
+                        {
+                            CurrentUnitState = UnitState.Chasing;
+                            break;
+                        }
                         yield return null;
                     }
 
@@ -223,23 +228,27 @@ public class EnemyBase : MonoBehaviour
     {
         while (CurrentUnitState == UnitState.Chasing)
         {
-            //FindClosestGridTile();
+            // Continuously update the path
             GetPlayerTile();
 
             List<Node> nodes = new List<Node>(currentPath);
-            Vector3 previousEndPosition = Vector3.zero;
 
-            foreach (Node node in currentPath)
+            Node[] nodesArray = nodes.ToArray();
+            for (int i = 0; i < currentPath.Count; i++)
             {
+                Node node = currentPath[i];
                 if (!node.walkable)
                     continue;
 
                 Vector3 targetPosition = node.transform.position + OffsetToGround;
 
-                // Move towards the target position
                 yield return StartCoroutine(MoveTowardsPosition(targetPosition));
 
-                PositionInGrid = node;
+                Node[] currentPathArray = currentPath.ToArray();
+                if (!currentPathArray.SequenceEqual(nodesArray))
+                {
+                    break;
+                }
             }
 
             yield return new WaitForSeconds(refreshRate);
@@ -248,20 +257,25 @@ public class EnemyBase : MonoBehaviour
 
     private IEnumerator MoveTowardsPosition(Vector3 targetPosition)
     {
-        while (transform.position != targetPosition)
+        float distance = Vector3.Distance(transform.position, targetPosition);
+        float moveSpeed = unitData.defaultSpeed;
+
+        // Keep moving until the distance to the target position is less than a small threshold
+        while (distance > 0.1f)
         {
+            // Calculate the interpolation factor based on distance and movement speed
+            float interpolationFactor = moveSpeed * Time.deltaTime / distance;
+            transform.position = Vector3.Lerp(transform.position, targetPosition, interpolationFactor);
 
-            transform.position = Vector3.MoveTowards(transform.position, targetPosition, unitData.defaultSpeed * Time.deltaTime);
-
-            if (transform.position == targetPosition && currentPath.Count > 0 && targetPosition != currentPath.Last().transform.position + OffsetToGround)
-            {
-                Debug.Log("End position has changed while moving. Breaking loop.");
-                break;
-            }
+            distance = Vector3.Distance(transform.position, targetPosition);
 
             yield return null;
         }
 
+        // Ensure the unit reaches the exact target position
+        transform.position = targetPosition;
+
+        // Update the grid position after reaching the target position
         FindClosestGridTile();
         GetPlayerTile();
     }

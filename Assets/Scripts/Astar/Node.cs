@@ -32,25 +32,26 @@ public class Node : MonoBehaviour
     {
         List<Node> neighbors = new List<Node>();
 
-        // Right
-        if (gridX + 1 < Grid.Instance.gridSizeX)
+        for (int x = -1; x <= 1; x++)
         {
-            AddNeighbor(gridX + 1, gridY, neighbors);
-        }
-        // Left
-        if (gridX - 1 >= 0)
-        {
-            AddNeighbor(gridX - 1, gridY, neighbors);
-        }
-        // Up
-        if (gridY + 1 < Grid.Instance.gridSizeY)
-        {
-            AddNeighbor(gridX, gridY + 1, neighbors);
-        }
-        // Down
-        if (gridY - 1 >= 0)
-        {
-            AddNeighbor(gridX, gridY - 1, neighbors);
+            for (int y = -1; y <= 1; y++)
+            {
+                if (x == 0 && y == 0)
+                    continue;
+
+                int checkX = gridX + x;
+                int checkY = gridY + y;
+
+                if (checkX >= 0 && checkX < Grid.Instance.gridSizeX && checkY >= 0 && checkY < Grid.Instance.gridSizeY)
+                {
+                    Node neighbor = Grid.Instance.grid[checkX, checkY].GetComponent<Node>();
+                    // Check if the neighbor is walkable, unoccupied, and not the node itself
+                    if (neighbor.walkable && !neighbor.occupied)
+                    {
+                        neighbors.Add(neighbor);
+                    }
+                }
+            }
         }
 
         return neighbors;

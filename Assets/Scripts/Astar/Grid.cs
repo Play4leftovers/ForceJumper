@@ -39,8 +39,6 @@ public class Grid : MonoBehaviour
             Instance = this;
             unoccupiedTiles = allTiles;
         }
-
-        //InvokeRepeating("SelectRandomTile", 1.0f, 1.0f);
     }
 
     void Start()
@@ -75,102 +73,7 @@ public class Grid : MonoBehaviour
                 currentPath[i].GetComponentInChildren<Renderer>().material.color = Color.red;
             }
         }
-
-        //if (Input.GetMouseButtonDown(0))
-        //{
-        //    Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        //    RaycastHit hit;
-
-        //    if (Physics.Raycast(ray, out hit))
-        //    {
-        //        GameObject clickedNode = hit.collider.gameObject;
-
-        //        if (clickedNode.CompareTag("Node"))
-        //        {
-        //            if (selectedNode != null)
-        //            {
-        //                List<Node> path = AStarPathfinding.FindPath(selectedNode, clickedNode, this);
-
-        //                DeselectNodeGameObject(selectedNode);
-
-        //                Vector3 mousePosition = Input.mousePosition;
-        //                mousePosition.z = Camera.main.transform.position.y;
-        //                Vector3 targetPosition = Camera.main.ScreenToWorldPoint(mousePosition);
-
-
-        //                foreach (Node node in path)
-        //                {
-
-        //                }
-        //            }
-
-        //            selectedNode = clickedNode;
-        //            SelectNodeGameObject(selectedNode);
-        //        }
-        //    }
-        //}
     }
-
-    //void OnMouseEnter()
-    //{
-    //    Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-    //    RaycastHit hit;
-
-    //    if (Physics.Raycast(ray, out hit))
-    //    {
-    //        GameObject hoveredNode = hit.collider.gameObject;
-
-    //        if (hoveredNode.CompareTag("Node"))
-    //        {
-    //            hoveredNode.GetComponentInChildren<Renderer>().material.color = Color.yellow;
-    //        }
-    //    }
-    //}
-
-    //void OnMouseExit()
-    //{
-    //    Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-    //    RaycastHit hit;
-
-    //    if (Physics.Raycast(ray, out hit))
-    //    {
-    //        GameObject exitedNode = hit.collider.gameObject;
-
-    //        if (exitedNode.CompareTag("Node"))
-    //        {
-    //            exitedNode.GetComponentInChildren<Renderer>().material.color = Color.white;
-    //        }
-    //    }
-    //}
-
-    //public void SelectTile()
-    //{
-    //    if (Input.GetMouseButtonDown(0))
-    //    {
-    //        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-    //        RaycastHit hit;
-
-    //        if (Physics.Raycast(ray, out hit))
-    //        {
-    //            GameObject clickedNode = hit.collider.gameObject;
-
-    //            if (clickedNode.CompareTag("Node") && unitIsSelected)
-    //            {
-    //                selectedUnit.GetComponent<UnitMovement>().SetNewPosition(currentPath.LastOrDefault().gameObject);
-    //                unitIsSelected = false;
-    //            }
-
-    //            if (clickedNode.CompareTag("Unit"))
-    //            {
-    //                if (clickedNode != null)
-    //                {
-    //                    selectedUnit = clickedNode.GetComponent<UnitMovement>().gameObject;
-    //                    unitIsSelected = true;
-    //                }
-    //            }
-    //        }
-    //    }
-    //}
 
     public void SelectRandomTile()
     {
@@ -218,6 +121,23 @@ public class Grid : MonoBehaviour
             for (int y = 0; y < gridSizeY; y++)
             {
                 Vector3 worldPoint = gridStartPosition + Vector3.right * (x * nodeDiameter + nodeSize) + Vector3.forward * (y * nodeDiameter + nodeSize);
+
+                // Perform a raycast downwards to determine the height of the node
+                RaycastHit hit;
+                if (Physics.Raycast(worldPoint + Vector3.up * 100f, Vector3.down, out hit, Mathf.Infinity))
+                {
+                    if (hit.collider.CompareTag("Ground"))
+                    {
+                        worldPoint.y = hit.point.y;
+                    }
+                }
+                else
+                {
+                    Debug.LogWarning("Raycast did not hit anything below the node. Adjusting Y position based on default height.");
+                    // If the raycast does not hit anything, use a default Y position
+                    worldPoint.y = transform.position.y;
+                }
+
                 Collider[] colliders = Physics.OverlapSphere(worldPoint, nodeSize);
                 bool walkable = true;
                 foreach (Collider col in colliders)
@@ -226,6 +146,7 @@ public class Grid : MonoBehaviour
                     {
                         walkable = false;
                     }
+
                 }
 
                 GameObject tile = Instantiate(TileObject, worldPoint, Quaternion.identity);
@@ -246,7 +167,6 @@ public class Grid : MonoBehaviour
             }
         }
     }
-
     public void SetGrid(Grid grid)
     {
         gridReference = this;
