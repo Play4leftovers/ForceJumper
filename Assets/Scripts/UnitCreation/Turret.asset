@@ -15,6 +15,8 @@ MonoBehaviour:
   className: Turret
   classDescription: Turret.
   promotedClass: 0
+  PermanentlyChasePlayer: 0
+  Projectile: {fileID: 9125543243252676492, guid: ff06cb22c22603c4384a900767e9c8dc, type: 3}
   defaultMovementRange: 5
   defaultHealth: 5
   defaultPower: 5
@@ -30,4 +32,3 @@ MonoBehaviour:
   aimGrowth: 0.174
   reflexesGrowth: 0.285
   attackSpeedGrowth: 0.227
-  UnitMobilityType: 0

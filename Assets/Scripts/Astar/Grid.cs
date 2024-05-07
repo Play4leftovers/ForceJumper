@@ -27,6 +27,7 @@ public class Grid : MonoBehaviour
     public GameObject[,] grid;
     public GameObject selectedNode;
     public GameObject TileObject;
+    public float highestAllowedPoint = 100;
     public Vector2 gridSize;
     public float nodeDiameter;
     public float nodeSize;
@@ -121,10 +122,11 @@ public class Grid : MonoBehaviour
             for (int y = 0; y < gridSizeY; y++)
             {
                 Vector3 worldPoint = gridStartPosition + Vector3.right * (x * nodeDiameter + nodeSize) + Vector3.forward * (y * nodeDiameter + nodeSize);
+                bool walkable = true;
 
                 // Perform a raycast downwards to determine the height of the node
                 RaycastHit hit;
-                if (Physics.Raycast(worldPoint + Vector3.up * 100f, Vector3.down, out hit, Mathf.Infinity))
+                if (Physics.Raycast(worldPoint + Vector3.up * highestAllowedPoint, Vector3.down, out hit, Mathf.Infinity))
                 {
                     if (hit.collider.CompareTag("Ground"))
                     {
@@ -133,18 +135,17 @@ public class Grid : MonoBehaviour
                 }
                 else
                 {
-                    Debug.LogWarning("Raycast did not hit anything below the node. Adjusting Y position based on default height.");
-                    // If the raycast does not hit anything, use a default Y position
+                    // If the raycast does not hit any ground, node is unreachable/deactivated.
+                    walkable = false;
                     worldPoint.y = transform.position.y;
                 }
 
                 Collider[] colliders = Physics.OverlapSphere(worldPoint, nodeSize);
-                bool walkable = true;
                 foreach (Collider col in colliders)
                 {
                     if (col.CompareTag("Wall"))
                     {
-                        walkable = false;
+                        walkable = false;   
                     }
 
                 }
