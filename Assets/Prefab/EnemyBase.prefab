@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5712169520314066459}
   - component: {fileID: 3012760321705716783}
   - component: {fileID: 184939174355395972}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -117,7 +117,7 @@ GameObject:
   - component: {fileID: 5760383925241306871}
   - component: {fileID: 1168949837208953110}
   - component: {fileID: 3988656463404526225}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Sphere
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -221,7 +221,7 @@ GameObject:
   - component: {fileID: 4766970894509595250}
   - component: {fileID: 329557780624967339}
   - component: {fileID: 5778351465683654965}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Sphere (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -304,7 +304,7 @@ GameObject:
   - component: {fileID: 2551620831380296837}
   - component: {fileID: 3414606518278851913}
   - component: {fileID: 1391801346413103584}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: EnemyBase
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -355,9 +355,9 @@ MonoBehaviour:
   viewAngle: 360
   baseViewAngle: 60
   OffsetToGround: {x: 0, y: 2, z: 0}
-  lockOnThreshold: 15
-  coneRadius: 45
-  coneLength: 45
+  lockOnThreshold: 25
+  coneRadius: 360
+  coneLength: 180
   lockedOn: 0
   canBeHarmed: 0
   StartCheckingLoS: 0
@@ -366,13 +366,14 @@ MonoBehaviour:
     m_Bits: 16
   blockedMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 88
   targetRotation: {x: 0, y: 0, z: 0, w: 0}
   rotationSpeed: 50
   player: {fileID: 0}
   playerCharacter: {fileID: 0}
-  EnemyCollider: {fileID: 0}
+  EnemyCollider: {fileID: 3988656463404526225}
   PositionInGrid: {fileID: 0}
+  refreshRate: 0.05
   UnitMobilityType: 1
   CurrentUnitState: 1
 --- !u!135 &1391801346413103584

@@ -10,6 +10,8 @@ public class UnitClassData : ScriptableObject
 
     public bool PermanentlyChasePlayer;
 
+    public GameObject Projectile;
+
     [Header("Base Stats")]
 
     public int defaultMovementRange;

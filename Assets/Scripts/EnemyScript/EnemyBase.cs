@@ -84,7 +84,7 @@ public class EnemyBase : MonoBehaviour
     public UnitType UnitMobilityType;
 
     public UnitState CurrentUnitState;
-
+    private bool shooting;
 
     void Start()
     {
@@ -138,11 +138,18 @@ public class EnemyBase : MonoBehaviour
         {
             rotating = false;
             lockedOn = true;
+
+            if (!shooting)
+            {
+                StartCoroutine(ShootCoroutine());
+                shooting = true;
+            }
         }
         else
         {
             rotating = true;
             lockedOn = false;
+            shooting = false;
         }
     }
 
@@ -345,9 +352,19 @@ public class EnemyBase : MonoBehaviour
 
     public IEnumerator ShootCoroutine()
     {
-        while (lockedOn)
+        while (lockedOn && StartCheckingLoS)
         {
-            yield return new WaitForSeconds(AttackSpeed);
+            GameObject Bullet = Instantiate(unitData.Projectile, transform.position, Quaternion.identity);
+
+            Vector3 directionToPlayer = (player.position - Bullet.transform.position).normalized;
+
+            Rigidbody BulletRB = Bullet.GetComponent<Rigidbody>();
+
+            BulletRB.AddForce(directionToPlayer * 25, ForceMode.Impulse);
+
+            Debug.Log("Shot bullet");
+
+            yield return new WaitForSeconds(5f / AttackSpeed);
         }
     }
 
@@ -378,6 +395,7 @@ public class EnemyBase : MonoBehaviour
                 CurrentUnitState = UnitState.Patrolling;
             }
 
+            shooting = false;
             lockedOn = false;
         }
     }
@@ -392,7 +410,7 @@ public class EnemyBase : MonoBehaviour
             {
                 foreach (var hitCollider in cone)
                 {
-                    var target = hitCollider.GetComponent<PlayerMovement>();
+                    var target = hitCollider.GetComponent<PlayerMovementPhysics>();
                     if (target == null) continue;
 
                     Transform targetTransform = hitCollider.transform;
@@ -402,7 +420,6 @@ public class EnemyBase : MonoBehaviour
                     if (angleToTarget < viewAngle / 2 || CurrentUnitState == UnitState.Chasing)
                     {
                         float distanceToTarget = Vector3.Distance(transform.position, targetTransform.position);
-
                         RaycastHit hit;
                         if (!Physics.Raycast(transform.position, targetDirection, out hit, distanceToTarget, blockedMask) || CurrentUnitState == UnitState.Chasing)
                         {

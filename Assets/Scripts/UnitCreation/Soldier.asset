@@ -16,6 +16,7 @@ MonoBehaviour:
   classDescription: Soldier.
   promotedClass: 0
   PermanentlyChasePlayer: 1
+  Projectile: {fileID: 9125543243252676492, guid: ff06cb22c22603c4384a900767e9c8dc, type: 3}
   defaultMovementRange: 5
   defaultHealth: 5
   defaultPower: 5
