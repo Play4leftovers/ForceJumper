@@ -6,6 +6,8 @@ using UnityEngine;
 
 public class Grid : MonoBehaviour
 {
+    public bool VisualizeGrid = false;
+
     public Grid gridReference;
     public bool unitIsSelected;
 
@@ -153,6 +155,11 @@ public class Grid : MonoBehaviour
                 GameObject tile = Instantiate(TileObject, worldPoint, Quaternion.identity);
                 Node node = tile.GetComponent<Node>();
                 node.walkable = walkable;
+
+                if (VisualizeGrid)
+                {
+                    tile.GetComponent<MeshRenderer>().enabled = true;
+                }
 
                 if (!node.walkable)
                 {
