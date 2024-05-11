@@ -13,8 +13,8 @@ public class PlayerMovementPhysics : MonoBehaviour
     private Vector2 _inputDir;
     private Vector3 _moveDir;
     private CapsuleCollider _capsuleCollider;
-    [SerializeField] private Camera camera;
-
+    [HideInInspector] public float currentSpeed;
+    
     private bool _inputStopper = false;
     
     [Header("Movement")]
@@ -34,7 +34,7 @@ public class PlayerMovementPhysics : MonoBehaviour
     
     [Header("Jump")]
     [SerializeField] private float jumpForce = 10;
-    [SerializeField] private bool doubleJump = false;
+    public bool doubleJump = false;
     [SerializeField] private float jumpCooldown = 0.3f;
     private bool _jumping;
     private bool _readyToJump = true;
@@ -54,6 +54,8 @@ public class PlayerMovementPhysics : MonoBehaviour
     [SerializeField] private float dashingDuration = 0.1f;
     [SerializeField] private float dashingSpeed = 2.5f; //Multiplier of maxSpeed
     [SerializeField] private float dashingSpeedChangeMultiplier = 40;
+    [SerializeField] private float dashCooldown = 2.0f;
+    public bool dashReady = true;
     private bool _dashing;
     private bool _keepMomentum;
     private float _preDashFloatingMaxSpeed;
@@ -67,8 +69,6 @@ public class PlayerMovementPhysics : MonoBehaviour
 
     [Header("Wallrunning")] 
     [SerializeField] private float wallRunningSpeed = 1.5f;
-    [SerializeField] private float wallRunningDuration;
-    [SerializeField] private float wallRunningAngleLimit = 45f;
     [SerializeField] private float wallrunningExitDuration = 0.2f;
     [SerializeField] private float wallrunningDownSpeed = 0.5f;
     public LayerMask wallMask;
@@ -151,12 +151,13 @@ public class PlayerMovementPhysics : MonoBehaviour
 
     public void Dash(InputAction.CallbackContext context)
     {
-        if (context.performed && !_dashing && !_crouching)
+        if (context.performed && !_dashing && !_crouching && dashReady)
         {
             _dashing = true;
             _preDashFloatingMaxSpeed = _floatingMaxSpeed;
             _inputStopper = true;
             _exitingSlope = true;
+            dashReady = false;
             Invoke(nameof(StopDash), dashingDuration);
         }
     }
@@ -389,6 +390,8 @@ public class PlayerMovementPhysics : MonoBehaviour
                 _rb.velocity = new Vector3(_rb.velocity.x, _floatingMaxSpeed / dashingSpeed, _rb.velocity.z);
             }
         }
+
+        currentSpeed = _rb.velocity.magnitude;
     }
 
     private IEnumerator SmoothLerpMoveSpeed()
@@ -469,6 +472,12 @@ public class PlayerMovementPhysics : MonoBehaviour
         _dashing = false;
         _inputStopper = false;
         _exitingSlope = false;
+        Invoke(nameof(ResetDashAvailability), dashCooldown);
+    }
+
+    void ResetDashAvailability()
+    {
+        dashReady = true;
     }
     #endregion
 }
