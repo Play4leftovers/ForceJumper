@@ -31,6 +31,7 @@ public class Grid : MonoBehaviour
     public Vector2 gridSize;
     public float nodeDiameter;
     public float nodeSize;
+    public bool VisualizeGrid;
     public int gridSizeX, gridSizeY;
 
     private void Awake()
@@ -126,12 +127,11 @@ public class Grid : MonoBehaviour
 
                 // Perform a raycast downwards to determine the height of the node
                 RaycastHit hit;
-                if (Physics.Raycast(worldPoint + Vector3.up * highestAllowedPoint, Vector3.down, out hit, Mathf.Infinity))
+                int groundLayerMask = LayerMask.GetMask("Ground");
+
+                if (Physics.Raycast(worldPoint + Vector3.up * highestAllowedPoint, Vector3.down, out hit, Mathf.Infinity, groundLayerMask))
                 {
-                    if (hit.collider.CompareTag("Ground"))
-                    {
-                        worldPoint.y = hit.point.y;
-                    }
+                    worldPoint.y = hit.point.y;
                 }
                 else
                 {
@@ -153,6 +153,11 @@ public class Grid : MonoBehaviour
                 GameObject tile = Instantiate(TileObject, worldPoint, Quaternion.identity);
                 Node node = tile.GetComponent<Node>();
                 node.walkable = walkable;
+
+                if (VisualizeGrid)
+                {
+                    tile.GetComponent<MeshRenderer>().enabled = true;
+                }
 
                 if (!node.walkable)
                 {
