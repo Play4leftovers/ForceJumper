@@ -811,7 +811,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6155039863854221801, guid: a61acf84942a40f4ea2b80a698bc2418, type: 3}
       propertyPath: dashingSpeed
-      value: 20
+      value: 350
+      objectReference: {fileID: 0}
+    - target: {fileID: 6155039863854221801, guid: a61acf84942a40f4ea2b80a698bc2418, type: 3}
+      propertyPath: dashingDuration
+      value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: 6155039863854221801, guid: a61acf84942a40f4ea2b80a698bc2418, type: 3}
       propertyPath: wallMask.m_Bits
@@ -847,7 +851,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6155039863854221801, guid: a61acf84942a40f4ea2b80a698bc2418, type: 3}
       propertyPath: dashingSpeedChangeMultiplier
-      value: 70
+      value: 250
       objectReference: {fileID: 0}
     - target: {fileID: 8155408345395792475, guid: a61acf84942a40f4ea2b80a698bc2418, type: 3}
       propertyPath: m_Name
@@ -1267,10 +1271,38 @@ PrefabInstance:
       propertyPath: playerMovementPhysics
       value: 
       objectReference: {fileID: 426419114}
+    - target: {fileID: 2438924445373931238, guid: 71a33d78e9dd6d84f80244ca64b960f8, type: 3}
+      propertyPath: m_fontColor.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2438924445373931238, guid: 71a33d78e9dd6d84f80244ca64b960f8, type: 3}
+      propertyPath: m_fontColor.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2438924445373931238, guid: 71a33d78e9dd6d84f80244ca64b960f8, type: 3}
+      propertyPath: m_fontColor.r
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2438924445373931238, guid: 71a33d78e9dd6d84f80244ca64b960f8, type: 3}
+      propertyPath: m_fontColor32.rgba
+      value: 4278190080
+      objectReference: {fileID: 0}
+    - target: {fileID: 2438924445373931238, guid: 71a33d78e9dd6d84f80244ca64b960f8, type: 3}
+      propertyPath: m_HorizontalAlignment
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2883422905763553937, guid: 71a33d78e9dd6d84f80244ca64b960f8, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: e20b315cc6561fc45adc65e6d9718572, type: 3}
     - target: {fileID: 2886518044268590440, guid: 71a33d78e9dd6d84f80244ca64b960f8, type: 3}
       propertyPath: m_Name
       value: HUD
       objectReference: {fileID: 0}
+    - target: {fileID: 6260950070513201562, guid: 71a33d78e9dd6d84f80244ca64b960f8, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 88ae7c296247acd4084b5a1d21d979ae, type: 3}
     - target: {fileID: 6636177607045113236, guid: 71a33d78e9dd6d84f80244ca64b960f8, type: 3}
       propertyPath: m_Pivot.x
       value: 0
