@@ -13,6 +13,7 @@ public class PlayerMovementPhysics : MonoBehaviour
     private Vector2 _inputDir;
     private Vector3 _moveDir;
     private CapsuleCollider _capsuleCollider;
+    [SerializeField] private Transform orientationPoint;
     [HideInInspector] public float currentSpeed;
     
     private bool _inputStopper = false;
@@ -281,8 +282,8 @@ public class PlayerMovementPhysics : MonoBehaviour
 
     void WallrunningCheck()
     {
-        _wallToRight = Physics.Raycast(transform.position, transform.right, out _outRight, 1, wallMask);
-        _wallToLeft = Physics.Raycast(transform.position, -transform.right, out _outLeft, 1, wallMask);
+        _wallToRight = Physics.Raycast(orientationPoint.position, orientationPoint.right, out _outRight, 1, wallMask);
+        _wallToLeft = Physics.Raycast(orientationPoint.position, -orientationPoint.right, out _outLeft, 1, wallMask);
 
         if (_jumping && (_wallToLeft || _wallToRight) && !_exitingWallrun)
         {
@@ -341,7 +342,7 @@ public class PlayerMovementPhysics : MonoBehaviour
     #region Movement and Speed Control
     void MovePlayer()
     {
-        var transform1 = transform;
+        var transform1 = orientationPoint;
         
         if(!_inputStopper) _moveDir = transform1.right * _inputDir.x + transform1.forward * _inputDir.y;
         if (onSlope && !_exitingSlope)

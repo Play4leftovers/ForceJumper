@@ -1,5 +1,37 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2860833640757190442
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7469566292119811393}
+  m_Layer: 0
+  m_Name: OrientationPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7469566292119811393
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2860833640757190442}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 879766280510847405}
+  m_Father: {fileID: 3424131184101892743}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2902689958648696169
 GameObject:
   m_ObjectHideFlags: 0
@@ -175,14 +207,14 @@ Transform:
   m_GameObject: {fileID: 8155408345395792475}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.303, z: -2.349}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 879766280510847405}
   - {fileID: 1825806117435925196}
   - {fileID: 3273675953235584132}
   - {fileID: 3240823277477006062}
+  - {fileID: 7469566292119811393}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &6155039863854221801
@@ -197,7 +229,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab5328f086ed1654ab71f8602c56850f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  camera: {fileID: 5057621881944050072}
+  orientationPoint: {fileID: 7469566292119811393}
+  currentSpeed: 0
   maxSpeed: 10
   accelerationForce: 13
   speedChangeMultiplier: 1
@@ -213,20 +246,20 @@ MonoBehaviour:
   onSlope: 0
   maxSlopeAngle: 45
   dashingDuration: 0.2
-  dashingSpeed: 20
-  dashingSpeedChangeMultiplier: 70
+  dashingSpeed: 350
+  dashingSpeedChangeMultiplier: 250
+  dashCooldown: 2
+  dashReady: 1
   crouchSpeed: 0.4
   slopeSlideSpeed: 3
   crouchYScale: 0.5
   slopeSpeedChangeMultiplier: 2.5
   wallRunningSpeed: 1.5
-  wallRunningDuration: 0
-  wallRunningAngleLimit: 45
-  wallrunExitDuration: 2
+  wallrunningExitDuration: 1.3
+  wallrunningDownSpeed: 0
   wallMask:
     serializedVersion: 2
     m_Bits: 64
-  _exitingWallrun: 0
   state: 0
 --- !u!114 &8205581557579750301
 MonoBehaviour:
@@ -401,9 +434,9 @@ Rigidbody:
   m_ImplicitTensor: 1
   m_UseGravity: 1
   m_IsKinematic: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_Constraints: 112
-  m_CollisionDetection: 0
+  m_CollisionDetection: 2
 --- !u!136 &2659376081702226085
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -426,7 +459,7 @@ CapsuleCollider:
   m_Radius: 0.5
   m_Height: 2
   m_Direction: 1
-  m_Center: {x: 0, y: -0.02591741, z: 0}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &8601111013837982218
 GameObject:
   m_ObjectHideFlags: 0
@@ -456,11 +489,11 @@ Transform:
   m_GameObject: {fileID: 8601111013837982218}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.6240001, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 3424131184101892743}
+  m_Father: {fileID: 7469566292119811393}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!20 &5057621881944050072
 Camera:

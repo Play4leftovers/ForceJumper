@@ -4,7 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3b41de63-934e-41fb-a411-0021e09efdca" name="Changes" comment="" />
+    <list default="true" id="3b41de63-934e-41fb-a411-0021e09efdca" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.ForceJumper/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ForceJumper/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Prefab/PlayerPhysicsMovement.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefab/PlayerPhysicsMovement.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scenes/Tor.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Tor.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Movement/PlayerMovementPhysics.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Movement/PlayerMovementPhysics.cs" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -105,7 +110,7 @@
       <workItem from="1713400368870" duration="2050000" />
       <workItem from="1714317560787" duration="3838000" />
       <workItem from="1715180510182" duration="3428000" />
-      <workItem from="1715764806088" duration="4403000" />
+      <workItem from="1715764806088" duration="7107000" />
     </task>
     <servers />
   </component>
