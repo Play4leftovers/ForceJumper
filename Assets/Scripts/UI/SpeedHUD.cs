@@ -10,6 +10,6 @@ public class SpeedHUD : MonoBehaviour
 
     public void UpdateSelf(float incomingValue)
     {
-        textMeshPro.text = incomingValue.ToString();
+        textMeshPro.text = incomingValue.ToString("F1");
     }
 }

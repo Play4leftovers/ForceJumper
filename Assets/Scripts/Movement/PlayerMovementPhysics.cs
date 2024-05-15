@@ -57,6 +57,7 @@ public class PlayerMovementPhysics : MonoBehaviour
     [SerializeField] private float dashCooldown = 2.0f;
     public bool dashReady = true;
     private bool _dashing;
+    private bool _postDash;
     private bool _keepMomentum;
     private float _preDashFloatingMaxSpeed;
     
@@ -204,13 +205,19 @@ public class PlayerMovementPhysics : MonoBehaviour
             _desiredMoveSpeed = maxSpeed;
         }
         //State - Sliding Slope
-        else if (_crouching && onSlope)
+        else if (_crouching && onSlope && _rb.velocity.y < 0)
         {
             state = MovementState.Sliding;
             _desiredMoveSpeed = maxSpeed * slopeSlideSpeed;
         }
+        //State - Slope Walking
+        else if (onSlope && _inputDir.magnitude != 0)
+        {
+            state = MovementState.Walking;
+            _desiredMoveSpeed = maxSpeed;
+        }
         //State - Sliding Crouch
-        else if (_crouching && (_floatingMaxSpeed > _desiredMoveSpeed))
+        else if (_crouching && (_floatingMaxSpeed > _desiredMoveSpeed) && !onSlope)
         {
             state = MovementState.Sliding;
             _desiredMoveSpeed = maxSpeed * crouchSpeed;
@@ -404,15 +411,15 @@ public class PlayerMovementPhysics : MonoBehaviour
         {
             _floatingMaxSpeed = Mathf.Lerp(startValue, _desiredMoveSpeed, time / diff);
 
-            if (onSlope)
+            if (_dashing || _postDash)
+            {
+                time += Time.deltaTime * speedChangeMultiplier * dashingSpeedChangeMultiplier;
+            }
+            else if (onSlope)
             {
                 float slopeAngle = Vector3.Angle(Vector3.up, _slopeHit.normal);
                 float slopeAngleIncrease = 1 + (slopeAngle / 90f);
                 time += Time.deltaTime * slopeSpeedChangeMultiplier * speedChangeMultiplier * slopeAngleIncrease;
-            }
-            else if (_dashing || _previousState == MovementState.Dash)
-            {
-                time += Time.deltaTime * speedChangeMultiplier * dashingSpeedChangeMultiplier;
             }
             else
             {
@@ -473,6 +480,14 @@ public class PlayerMovementPhysics : MonoBehaviour
         _inputStopper = false;
         _exitingSlope = false;
         Invoke(nameof(ResetDashAvailability), dashCooldown);
+
+        _postDash = true;
+        Invoke(nameof(PostDashEnd), dashingDuration*3);
+    }
+
+    void PostDashEnd()
+    {
+        _postDash = false;
     }
 
     void ResetDashAvailability()
