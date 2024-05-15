@@ -146,7 +146,7 @@ public class PlayerMovementPhysics : MonoBehaviour
         {
             _crouching = false;
             _desiredMoveSpeed = maxSpeed;
-            _capsuleCollider.height /= crouchYScale;
+            _capsuleCollider.height = _playerHeight;
         }
     }
 
