@@ -745,6 +745,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2659376081702226085, guid: a61acf84942a40f4ea2b80a698bc2418, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 13400000, guid: 462ea7a6660e4a440b86585be1ca6995, type: 2}
     - target: {fileID: 3424131184101892743, guid: a61acf84942a40f4ea2b80a698bc2418, type: 3}
       propertyPath: m_LocalPosition.x
       value: 12.7
@@ -784,30 +788,6 @@ PrefabInstance:
     - target: {fileID: 3424131184101892743, guid: a61acf84942a40f4ea2b80a698bc2418, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3739227438798264813, guid: a61acf84942a40f4ea2b80a698bc2418, type: 3}
-      propertyPath: m_Interpolate
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3739227438798264813, guid: a61acf84942a40f4ea2b80a698bc2418, type: 3}
-      propertyPath: m_CollisionDetection
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 6155039863854221801, guid: a61acf84942a40f4ea2b80a698bc2418, type: 3}
-      propertyPath: dashingSpeed
-      value: 350
-      objectReference: {fileID: 0}
-    - target: {fileID: 6155039863854221801, guid: a61acf84942a40f4ea2b80a698bc2418, type: 3}
-      propertyPath: wallrunningDownSpeed
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6155039863854221801, guid: a61acf84942a40f4ea2b80a698bc2418, type: 3}
-      propertyPath: wallrunningExitDuration
-      value: 1.3
-      objectReference: {fileID: 0}
-    - target: {fileID: 6155039863854221801, guid: a61acf84942a40f4ea2b80a698bc2418, type: 3}
-      propertyPath: dashingSpeedChangeMultiplier
-      value: 250
       objectReference: {fileID: 0}
     - target: {fileID: 8155408345395792475, guid: a61acf84942a40f4ea2b80a698bc2418, type: 3}
       propertyPath: m_Name
