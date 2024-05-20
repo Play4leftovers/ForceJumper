@@ -125,51 +125,67 @@ public class Grid : MonoBehaviour
                 Vector3 worldPoint = gridStartPosition + Vector3.right * (x * nodeDiameter + nodeSize) + Vector3.forward * (y * nodeDiameter + nodeSize);
                 bool walkable = true;
 
-                // Perform a raycast downwards to determine the height of the node
                 RaycastHit hit;
                 int groundLayerMask = LayerMask.GetMask("Ground");
 
                 if (Physics.Raycast(worldPoint + Vector3.up * highestAllowedPoint, Vector3.down, out hit, Mathf.Infinity, groundLayerMask))
                 {
                     worldPoint.y = hit.point.y;
+
+                    // Rotate the tile based on the normal of the hit surface (can handle slopes)
+                    Quaternion rotation = Quaternion.FromToRotation(Vector3.up, hit.normal);
+
+                    GameObject tile = Instantiate(TileObject, worldPoint, rotation);
+
+                    Node node = tile.GetComponent<Node>();
+                    node.walkable = walkable;
+
+                    if (VisualizeGrid)
+                    {
+                        tile.GetComponent<MeshRenderer>().enabled = true;
+                    }
+
+                    if (!node.walkable)
+                    {
+                        tile.GetComponentInChildren<Renderer>().material.color = Color.blue;
+                        tile.GetComponentInChildren<MeshRenderer>().enabled = false;
+                    }
+
+                    node.gridX = x;
+                    node.gridY = y;
+                    node.worldPosition = worldPoint;
+                    grid[x, y] = tile;
+                    SetGrid(this);
                 }
                 else
                 {
                     // If the raycast does not hit any ground, node is unreachable/deactivated.
                     walkable = false;
                     worldPoint.y = transform.position.y;
-                }
 
-                Collider[] colliders = Physics.OverlapSphere(worldPoint, nodeSize);
-                foreach (Collider col in colliders)
-                {
-                    if (col.CompareTag("Wall"))
+                    // Instantiate the tile with default rotation
+                    GameObject tile = Instantiate(TileObject, worldPoint, Quaternion.identity);
+
+                    Node node = tile.GetComponent<Node>();
+                    node.walkable = walkable;
+
+                    if (VisualizeGrid)
                     {
-                        walkable = false;   
+                        tile.GetComponent<MeshRenderer>().enabled = true;
                     }
 
+                    if (!node.walkable)
+                    {
+                        tile.GetComponentInChildren<Renderer>().material.color = Color.blue;
+                        tile.GetComponentInChildren<MeshRenderer>().enabled = false;
+                    }
+
+                    node.gridX = x;
+                    node.gridY = y;
+                    node.worldPosition = worldPoint;
+                    grid[x, y] = tile;
+                    SetGrid(this);
                 }
-
-                GameObject tile = Instantiate(TileObject, worldPoint, Quaternion.identity);
-                Node node = tile.GetComponent<Node>();
-                node.walkable = walkable;
-
-                if (VisualizeGrid)
-                {
-                    tile.GetComponent<MeshRenderer>().enabled = true;
-                }
-
-                if (!node.walkable)
-                {
-                    tile.GetComponentInChildren<Renderer>().material.color = Color.blue;
-                    tile.GetComponentInChildren<MeshRenderer>().enabled = false;
-                }
-
-                node.gridX = x;
-                node.gridY = y;
-                node.worldPosition = worldPoint;
-                grid[x, y] = tile;
-                SetGrid(this);
             }
         }
     }
