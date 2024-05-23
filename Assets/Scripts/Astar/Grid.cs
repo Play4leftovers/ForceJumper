@@ -6,10 +6,13 @@ using UnityEngine;
 
 public class Grid : MonoBehaviour
 {
+    [Header("Logistics")]
     public Grid gridReference;
     public bool unitIsSelected;
 
     public GameObject selectedUnit;
+
+    [Header("Lists And Information")]
 
     public List<Unit> allUnits = new List<Unit>();
     public List<Node> allTiles = new List<Node>();
@@ -27,13 +30,18 @@ public class Grid : MonoBehaviour
     public GameObject[,] grid;
     public GameObject selectedNode;
     public GameObject TileObject;
-    public float highestAllowedPoint = 100;
+
+    [Header("Node And Grid Properties")]
     public Vector2 gridSize;
+    public int gridSizeX, gridSizeY;
     public float nodeDiameter;
     public float nodeSize;
-    public bool VisualizeGrid;
-    public int gridSizeX, gridSizeY;
+    public float highestAllowedPoint = 100;
 
+    [Header("Debug")]
+    public bool VisualizeGrid;
+
+    // Set all tiles as unoccupied by default, and establish the instance.
     private void Awake()
     {
         if (Instance == null)
@@ -43,6 +51,7 @@ public class Grid : MonoBehaviour
         }
     }
 
+    // Initialize all the node properties and create the grid.
     void Start()
     {
         nodeDiameter = nodeSize * 2;
@@ -56,7 +65,6 @@ public class Grid : MonoBehaviour
         if (centerX >= 0 && centerX < gridSizeX && centerY >= 0 && centerY < gridSizeY)
         {
             selectedNode = grid[centerX, centerY];
-            SelectNodeGameObject(selectedNode);
         }
     }
 
@@ -64,19 +72,24 @@ public class Grid : MonoBehaviour
     {
         if (grid == null) return;
 
-        for (int i = 0; i < currentPath.Count; i++)
+        // For debug purposes, set the color of the grid tiles to show how the path is being created.
+        if (VisualizeGrid)
         {
-            if (currentPath[i] != currentPath[currentPath.Count - 1])
+            for (int i = 0; i < currentPath.Count; i++)
             {
-                currentPath[i].GetComponent<MeshRenderer>().material.color = Color.yellow;
-            }
-            else
-            {
-                currentPath[i].GetComponentInChildren<Renderer>().material.color = Color.red;
+                if (currentPath[i] != currentPath[currentPath.Count - 1])
+                {
+                    currentPath[i].GetComponent<MeshRenderer>().material.color = Color.yellow;
+                }
+                else
+                {
+                    currentPath[i].GetComponentInChildren<Renderer>().material.color = Color.red;
+                }
             }
         }
     }
 
+    //Selects a random tile from the current path, or if there is no path, from the entire grid.
     public void SelectRandomTile()
     {
         if (currentPath.Count > 0)
@@ -102,6 +115,7 @@ public class Grid : MonoBehaviour
 
     }
 
+    //Remove node. This should be done with caution, it is better to use the tags "Wall" to prevent tiles from spawning rather than deleting them after the grid is set.
     public void RemoveNode(Node node, List<Node> knownNeighbors)
     {
         List<Node> neighbors = node.GetNeighbors();
@@ -135,11 +149,13 @@ public class Grid : MonoBehaviour
                     // Rotate the tile based on the normal of the hit surface (can handle slopes)
                     Quaternion rotation = Quaternion.FromToRotation(Vector3.up, hit.normal);
 
+                    // Spawn the tile at the world point, pass in the normal of the hit surface and set its rotation to match.
                     GameObject tile = Instantiate(TileObject, worldPoint, rotation);
 
                     Node node = tile.GetComponent<Node>();
                     node.walkable = walkable;
 
+                    // For debug purposes, show the grid tile and its position/rotation.
                     if (VisualizeGrid)
                     {
                         tile.GetComponent<MeshRenderer>().enabled = true;
@@ -163,12 +179,14 @@ public class Grid : MonoBehaviour
                     walkable = false;
                     worldPoint.y = transform.position.y;
 
-                    // Instantiate the tile with default rotation
+                    // Instantiate the tile with default rotation (0).
                     GameObject tile = Instantiate(TileObject, worldPoint, Quaternion.identity);
 
                     Node node = tile.GetComponent<Node>();
                     node.walkable = walkable;
 
+
+                    // For debug purposes, show the grid tile and its position/rotation.
                     if (VisualizeGrid)
                     {
                         tile.GetComponent<MeshRenderer>().enabled = true;
@@ -180,6 +198,7 @@ public class Grid : MonoBehaviour
                         tile.GetComponentInChildren<MeshRenderer>().enabled = false;
                     }
 
+                    // Set the node x-and-y position, and update the grid accordingly.
                     node.gridX = x;
                     node.gridY = y;
                     node.worldPosition = worldPoint;
@@ -194,6 +213,7 @@ public class Grid : MonoBehaviour
         gridReference = this;
     }
 
+    // Gets a node from world point, can be used for getting tiles in proximity of the player, or getting the nearest tile.
     public Node NodeFromWorldPoint(Vector3 worldPosition)
     {
         float percentX = Mathf.Clamp01((worldPosition.x + gridSize.x / 2) / gridSize.x);
@@ -213,15 +233,5 @@ public class Grid : MonoBehaviour
         {
             return null;
         }
-    }
-
-    void SelectNodeGameObject(GameObject node)
-    {
-        node.GetComponentInChildren<Renderer>().material.color = Color.green;
-    }
-
-    void DeselectNodeGameObject(GameObject node)
-    {
-        node.GetComponentInChildren<Renderer>().material.color = Color.yellow;
     }
 }

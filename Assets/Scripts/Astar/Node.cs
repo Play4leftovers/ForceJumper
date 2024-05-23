@@ -4,10 +4,17 @@ using UnityEngine;
 
 public class Node : MonoBehaviour
 {
+    [Header("Logistics")]
     public Vector3 worldPosition;
 
     public bool walkable;
     public bool occupied;
+    
+    public Node Parent;
+    public GameObject Occupant;
+    private GameObject _gameObject;
+
+    [Header("Individual Properties")]
     public int gridX;
     public int gridY;
 
@@ -15,19 +22,13 @@ public class Node : MonoBehaviour
     public int hCost;
     public int fCost => gCost + hCost;
 
-    public Node parent;
-
-    public GameObject occupant;
-
-    private GameObject _gameObject;
-
     public void Awake()
     {
         if (Grid.Instance != null)
             Grid.Instance.allTiles.Add(this);
     }
 
-    // Returns a list of the node's neighbors
+    // Returns a list of the node's neighbors. Goes in all directions (up, down, left, right, diagonally). 
     public List<Node> GetNeighbors()
     {
         List<Node> neighbors = new List<Node>();
@@ -70,9 +71,10 @@ public class Node : MonoBehaviour
         }
     }
 
+    // Set tile as occupied, Can be used to discourage enemies from walking into each other.
     public void SetAsOccupied(GameObject newOccupant)
     {
-        occupant = newOccupant;
+        Occupant = newOccupant;
 
         walkable = false;
         occupied = true;
@@ -85,9 +87,10 @@ public class Node : MonoBehaviour
         }
     }
 
+    // Reset the occupied tile, set it as vacant.
     public void SetAsUnoccupied()
     {
-        occupant = null;
+        Occupant = null;
 
         walkable = true;
         occupied = false;
